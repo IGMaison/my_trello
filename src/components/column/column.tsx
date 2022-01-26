@@ -2,7 +2,17 @@ import React from "react";
 import styled from "styled-components";
 import ColumnCont from "./column_cont";
 
-const Div = styled.div`
+const Column = () => {
+  return (
+    <ColumnWraper>
+      <ColumnCont />
+    </ColumnWraper>
+  );
+};
+
+export default Column;
+
+const ColumnWraper = styled.div`
   background-color: #456;
   display: flex;
   flex-direction: column;
@@ -14,12 +24,3 @@ const Div = styled.div`
   min-width: 300px;
   margin: 8px;
 `;
-const Column = (props: any) => {
-  return (
-    <Div>
-      <ColumnCont />
-    </Div>
-  );
-};
-
-export default Column;

@@ -1,9 +1,20 @@
 import React from "react";
 import styled from "styled-components";
 import CardName from "../card/card_name";
-import StickerCont from "./sticker-cont";
+import StickerCont from "./sticker_cont";
 
-const Div = styled.div`
+const Sticker = () => {
+  return (
+    <StickerBase>
+      <CardName />
+      <StickerCont />
+    </StickerBase>
+  );
+};
+
+export default Sticker;
+
+const StickerBase = styled.div`
   border: 0 white;
   box-sizing: border-box;
   color: black;
@@ -22,13 +33,3 @@ const Div = styled.div`
   text-decoration: none;
   text-align: left;
 `;
-const Sticker = (props: any) => {
-  return (
-    <Div>
-      <CardName />
-      <StickerCont />
-    </Div>
-  );
-};
-
-export default Sticker;

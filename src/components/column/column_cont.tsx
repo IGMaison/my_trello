@@ -4,7 +4,19 @@ import Sticker from "../sticker/sticker";
 import Button from "./button_add_card";
 import ColumnName from "./column_name";
 
-const Div = styled.div`
+const ColumnCont = () => {
+  return (
+    <Content>
+      <ColumnName />
+      <Sticker />
+      <Button />
+    </Content>
+  );
+};
+
+export default ColumnCont;
+
+const Content = styled.div`
   background-color: #ebecf0;
   padding: 8px;
   border-radius: 3px;
@@ -16,14 +28,3 @@ const Div = styled.div`
   width: 100%;
   max-width: 300px;
 `;
-const ColumnCont = (props: any) => {
-  return (
-    <Div>
-      <ColumnName />
-      <Sticker />
-      <Button />
-    </Div>
-  );
-};
-
-export default ColumnCont;

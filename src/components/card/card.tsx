@@ -1,14 +1,30 @@
 import React from "react";
 import styled from "styled-components";
+import { JsxAttribute, JsxElement } from "typescript";
+import CardContent from "./card_content";
 import CardName from "./card_name";
 
-const Div = styled.div`
+const Card = () => {
+  return (
+    <Back>
+      <PopupCard>
+        <CardName weight="700" size="24px"  />
+        <CardContent />
+      </PopupCard>
+    </Back>
+  );
+};
+
+export default Card;
+
+const Back = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
+  background-color: #0000008c;
 `;
 
-const Popup = styled.div`
+const PopupCard = styled.div`
   background-color: #ebecf0;
   padding: 8px;
   border-radius: 3px;
@@ -21,17 +37,5 @@ const Popup = styled.div`
   bottom: 0;
   top: 0;
   height: fit-content;
-  min-height: 768px;
 `;
 
-const Card = (props: any) => {
-  return (
-    <Div>
-      <Popup>
-        <CardName size="24px" />
-      </Popup>
-    </Div>
-  );
-};
-
-export default Card;

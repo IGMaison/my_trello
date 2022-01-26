@@ -1,7 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 
-const Div = styled.div`
+const ColumnName = () => {
+  return <Name>Заголовок колонки</Name>;
+};
+
+export default ColumnName;
+
+const Name = styled.div`
   color: black;
   margin: 0;
   padding: 0.2em 1em;
@@ -11,8 +17,3 @@ const Div = styled.div`
   min-height: 20px;
   text-align: left;
 `;
-const ColumnName = (props: any) => {
-  return <Div>Заголовок колонки</Div>;
-};
-
-export default ColumnName;
