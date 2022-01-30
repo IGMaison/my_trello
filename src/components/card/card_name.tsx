@@ -1,21 +1,32 @@
 import React from "react";
 import styled from "styled-components";
 
-const CardName = (props: any) => {
-  return <Name style={props}>Заголовок карточки</Name>;
+interface Style {
+    contentEditable: boolean,
+    weight: number,
+    size: string,
+}
+
+const CardName = (props: Style | {}) => {
+    return (
+        <Name {...props}>
+            Заголовок карточки
+        </Name>
+    );
 };
 
 export default CardName;
 
-const Name = styled.div<any>`
-  font-weight: ${(props: any) => {
-    return props.style.weight || "";    
-  }};
+const Name = styled.div<Style | {}>`
+  font-weight: ${(props: Style | {}): number => {
+    return ('weight' in props) ? props.weight : 300;
+}};
   margin: 0;
-  padding: 0;
-  font-size: ${(props: any) => {
-    return props.style.size || "14px";
-  }};
+  padding: 1px;
+  font-size: ${(props: Style | {}): string => {
+    return 'size' in props ? props.size : "14px";
+}};
+  line-height: 1.2em;
   position: relative;
-  
+  display: flow-root;
 `;
