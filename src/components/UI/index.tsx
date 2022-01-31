@@ -1,4 +1,4 @@
-import ButtonString from "./button_string";
+import Button from "./button";
 import ButtonStringOrange from "./button_string_orange";
-export { ButtonString };
+export { Button };
 export { ButtonStringOrange };

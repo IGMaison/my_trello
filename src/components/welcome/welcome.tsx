@@ -1,8 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import {JsxAttribute, JsxElement} from "typescript";
 
-const Enter = () => {
+const Welcome = () => {
     return (
         <Back>
             <Popup>
@@ -15,7 +14,7 @@ const Enter = () => {
     );
 };
 
-export default Enter;
+export default Welcome;
 
 const Back = styled.div`
   visibility: visible;

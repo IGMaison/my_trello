@@ -1,20 +1,23 @@
 import React from "react";
 import styled from "styled-components";
-import {ButtonStringOrange} from "../IU";
-import {ButtonString} from "../IU";
-import CardContent from "./card_content";
-import CardName from "./card_name";
+import {Button} from "../UI";
+import Comments from "../comments";
 
 const Card = () => {
     return (
         <Back>
             <PopupCard>
                 <ButtonClose>X</ButtonClose>
-                <CardName contentEditable={true} weight={700} size="24px"/>
-                <ButtonStringOrange>Сохранить</ButtonStringOrange>
+                <CardName contentEditable={true}>Заголовок карточки</CardName>
+                <ButtonOrange>Сохранить</ButtonOrange>
                 <Author>Создал: Автор А.А.</Author>
-                <CardContent/>
-                <ButtonString style={{float: "right"}}>Удалить карточку</ButtonString>
+                <Content>
+                    <ContHeader>Описание</ContHeader>
+                    <ButtonEdit>Изменить</ButtonEdit>
+                    <CardText contentEditable="true">Описание подробно</CardText>
+                    <Comments />
+                </Content>
+                <Button style={{float: "right"}}>Удалить карточку</Button>
             </PopupCard>
         </Back>
     );
@@ -51,10 +54,53 @@ const PopupCard = styled.div`
   height: fit-content;
 `;
 
+const CardName = styled.div`
+  font-weight: 700;
+  margin: 0;
+  padding: 1px;
+  font-size: 24px;
+  line-height: 1.3em;
+  position: relative;
+  display: flow-root;
+`;
+
 const Author = styled.div`
   font-weight: 300;
 `;
 
-const ButtonClose = styled(ButtonStringOrange)`
+const ButtonOrange = styled(Button)`
+  border-radius: 3px;
+  background-color: #e91;
+  color: #fff;
+  border: 0px solid;
+`
+
+const ButtonClose = styled(Button)`
+  border-radius: 3px;
+  background-color: #e91;
+  color: #fff;
+  border: 0px solid;
   float: right;
 `;
+
+const ButtonEdit = styled(Button)`
+  background-color: #ddd;
+`;
+const ContHeader = styled.h2`
+  display: inline-block;
+  margin-block: 0;
+  margin: 1em 1em 0 0;
+`;
+
+const CardText = styled.div`
+  margin: 1em;
+  padding: 2px;
+  border: #ccc 1px;
+  border-style: none none solid solid;
+`;
+
+const Content = styled.div`
+  margin: 0;
+  padding: 0;
+`;
+

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { ButtonStringOrange } from "../IU";
-import { ButtonString } from "../IU";
+import { ButtonStringOrange } from "../../UI";
+import { Button } from "../../UI";
 
 const Comment = () => {
   return (
@@ -9,7 +9,7 @@ const Comment = () => {
       Автор коммента:Автор
       <ButtonDel>X</ButtonDel>
       <Post contentEditable="true">Коммент</Post>
-      <ButtonString>Изменить</ButtonString>
+      <Button>Изменить</Button>
       <ButtonStringOrange>Сохранить</ButtonStringOrange>
       <br />
       <br />

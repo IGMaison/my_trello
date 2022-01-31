@@ -1,18 +1,16 @@
 import React from "react";
 import styled from "styled-components";
-import CardName from "../card/card_name";
-import StickerCont from "./sticker_cont";
 
-const Sticker = () => {
+const CardSticker = () => {
   return (
     <StickerBase>
-      <CardName />
-      <StickerCont />
+      <CardName>Заголовок карточки</CardName>
+      <StickerProp>{"= {)14"}</StickerProp>
     </StickerBase>
   );
 };
 
-export default Sticker;
+export default CardSticker;
 
 const StickerBase = styled.div`
   border: 0 white;
@@ -32,4 +30,23 @@ const StickerBase = styled.div`
   min-height: 20px;
   text-decoration: none;
   text-align: left;
+`;
+
+const CardName = styled.div`
+  font-weight: 300;
+  margin: 0;
+  padding: 1px;
+  font-size: 14px;
+  line-height: 1.2em;
+  position: relative;
+  display: flow-root;
+`;
+
+const StickerProp = styled.div`
+  color: black;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  overflow: hidden;
+  position: relative;
 `;

@@ -1,9 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const ButtonStringOrange = styled.button`
-  font-size: 14px;
-  font-weight: 400;
+const ButtonStringOrang = styled.button`  
   text-align: left;
   cursor: pointer;
   border-radius: 3px;
@@ -17,4 +15,4 @@ const ButtonStringOrange = styled.button`
     background-color: skyblue;
   }
 `;
-export default ButtonStringOrange;
+export default ButtonStringOrang;

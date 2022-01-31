@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const ButtonString = styled.button`
+const Button = styled.button`
   font-size: 14px;
   font-weight: 400;
   color: #5e6c84;
@@ -15,4 +15,4 @@ const ButtonString = styled.button`
     background-color: skyblue;
   }
 `;
-export default ButtonString;
+export default Button;
