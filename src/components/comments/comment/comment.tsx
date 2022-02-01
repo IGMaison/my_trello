@@ -1,16 +1,16 @@
 import React from "react";
 import styled from "styled-components";
-import { ButtonStringOrange } from "../../UI";
-import { Button } from "../../UI";
+import  {Button} from "../../UI";
+import {buttonStyleEnum} from "../../UI";
 
 const Comment = () => {
   return (
     <CommentBody>
       Автор коммента:Автор
-      <ButtonDel>X</ButtonDel>
+      <Button buttonStyle={buttonStyleEnum.ORANGE} style={{float: "right"}}>X</Button>
       <Post contentEditable="true">Коммент</Post>
-      <Button>Изменить</Button>
-      <ButtonStringOrange>Сохранить</ButtonStringOrange>
+      <Button buttonStyle={buttonStyleEnum.GREY}>Изменить</Button>
+      <Button buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
       <br />
       <br />
     </CommentBody>
@@ -43,6 +43,3 @@ const Post = styled.div`
   text-align: left;
 `;
 
-const ButtonDel = styled(ButtonStringOrange)`
-  float: right;
-`;

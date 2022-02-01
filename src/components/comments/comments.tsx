@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Comment from "./comment";
-import {ButtonStringOrange} from "../UI";
+import {Button, buttonStyleEnum} from "../UI";
 
 const Comments = () => {
   return (
@@ -9,7 +9,7 @@ const Comments = () => {
       <h2>Комментарии</h2>
       <CommentNew>
           <PostNew contentEditable="true">Тут будет новый коммент</PostNew>
-          <ButtonStringOrange>Сохранить</ButtonStringOrange>
+          <Button buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
           <br />
           <br />
       </CommentNew>

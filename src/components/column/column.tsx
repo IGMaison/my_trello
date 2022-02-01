@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import CardSticker from "../card_sticker";
 import {Button} from "../UI";
+import {buttonStyleEnum} from "../UI";
 
 const Column = () => {
   return (
@@ -9,7 +10,7 @@ const Column = () => {
         <Content>
             <ColumnTitle>Заголовок колонки</ColumnTitle>
             <CardSticker />
-            <Button>+ Добавить карточку</Button>
+            <Button buttonStyle={buttonStyleEnum.STRING_GREY}>+ Добавить карточку</Button>
         </Content>
     </ColumnWrapper>
   );

@@ -1,23 +1,24 @@
 import React from "react";
 import styled from "styled-components";
 import {Button} from "../UI";
+import {buttonStyleEnum} from "../UI";
 import Comments from "../comments";
 
 const Card = () => {
     return (
         <Back>
             <PopupCard>
-                <ButtonClose>X</ButtonClose>
+                <Button buttonStyle={buttonStyleEnum.ORANGE} style={{float: "right"}}>X</Button>
                 <CardName contentEditable={true}>Заголовок карточки</CardName>
-                <ButtonOrange>Сохранить</ButtonOrange>
+                <Button buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
                 <Author>Создал: Автор А.А.</Author>
                 <Content>
                     <ContHeader>Описание</ContHeader>
-                    <ButtonEdit>Изменить</ButtonEdit>
+                    <Button buttonStyle={buttonStyleEnum.GREY}>Изменить</Button>
                     <CardText contentEditable="true">Описание подробно</CardText>
                     <Comments />
                 </Content>
-                <Button style={{float: "right"}}>Удалить карточку</Button>
+                <Button buttonStyle={buttonStyleEnum.STRING_GREY} style={{float: "right"}}>Удалить карточку</Button>
             </PopupCard>
         </Back>
     );
@@ -68,24 +69,6 @@ const Author = styled.div`
   font-weight: 300;
 `;
 
-const ButtonOrange = styled(Button)`
-  border-radius: 3px;
-  background-color: #e91;
-  color: #fff;
-  border: 0px solid;
-`
-
-const ButtonClose = styled(Button)`
-  border-radius: 3px;
-  background-color: #e91;
-  color: #fff;
-  border: 0px solid;
-  float: right;
-`;
-
-const ButtonEdit = styled(Button)`
-  background-color: #ddd;
-`;
 const ContHeader = styled.h2`
   display: inline-block;
   margin-block: 0;

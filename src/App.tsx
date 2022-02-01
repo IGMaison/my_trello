@@ -5,6 +5,7 @@ import Card from "./components/card";
 import Welcome from "./components/welcome";
 
 function App() {
+
     return (
         <Main>
             <Column />
