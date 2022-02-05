@@ -4,16 +4,18 @@ import CardSticker from "../card_sticker";
 import {Button} from "../UI";
 import {buttonStyleEnum} from "../UI";
 
-const Column = () => {
-  return (
-    <ColumnWrapper>
-        <Content>
-            <ColumnTitle>Заголовок колонки</ColumnTitle>
-            <CardSticker />
-            <Button buttonStyle={buttonStyleEnum.STRING_GREY}>+ Добавить карточку</Button>
-        </Content>
-    </ColumnWrapper>
-  );
+type PropsType = {columnContent: { title: string, content: Array<object> }}
+
+const Column = ({columnContent}: PropsType) => {
+    return (
+        <ColumnWrapper>
+            <Content>
+                <ColumnTitle>{columnContent.title}</ColumnTitle>
+                <CardSticker/>
+                <Button buttonStyle={buttonStyleEnum.STRING_GREY}>+ Добавить карточку</Button>
+            </Content>
+        </ColumnWrapper>
+    );
 };
 
 export default Column;

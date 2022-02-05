@@ -3,22 +3,25 @@ import styled from "styled-components";
 import Column from "./components/column";
 import Card from "./components/card";
 import Welcome from "./components/welcome";
-import {dataType} from "./components/services";
+import {dataType, emptyData} from "./components/services";
 
 function App() {
-    let emptyData: dataType;
-    emptyData = {
-        columns: {},
-    };
+
     const [userName, changeUserName] = useState("");
     const [trelloData, setTrelloData] = useState(emptyData);
-
     return (
         <Main>
-            <Column/>
-            <Column/>
-            <Column/>
-            <Column/>
+            {Object.keys(trelloData.columns).length > 0 ?
+                Object.keys(trelloData.columns).map((key, index) => {
+                    return (
+                        <Column
+                            key={key}
+                            columnContent={trelloData.columns[key]}
+                        />
+                    )
+                })
+                :
+                <>NOTHING TO SHOW</>}
             <Card/>
             <Welcome changeUserName={changeUserName} setData={setTrelloData}/>
         </Main>
