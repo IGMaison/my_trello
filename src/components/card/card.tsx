@@ -1,4 +1,4 @@
-import React, {Fragment} from "react";
+import React, {Fragment, useEffect} from "react";
 import styled from "styled-components";
 import {Button} from "../UI";
 import {buttonStyleEnum} from "../UI";
@@ -16,27 +16,44 @@ type PropsType = {
 }
 
 const Card = (props: PropsType) => {
-
     function clickClose() {
         props.setCardStatus(false);
     }
+
+    function escKeyDown(ev: KeyboardEvent) {
+        if (ev.key === "Escape") {
+            props.setCardStatus(false);
+
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener("keydown", escKeyDown);
+        return () => {
+            document.removeEventListener("keydown", escKeyDown);
+        };
+    }, []);
+
 
     return (
         <Fragment>
             {props.cardStatus && <Back>
                 <PopupCard>
                     <Button onClick={clickClose} buttonStyle={buttonStyleEnum.ORANGE} style={{float: "right"}}
-                            >X</Button>
+                    >X</Button>
                     <CardName contentEditable={true}>{props.name}</CardName>
-                    <Button onClick={()=>{}} buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
+                    <Button onClick={() => {
+                    }} buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
                     <Author>Создал: {props.user}</Author>
                     <Content>
                         <ContHeader>Описание</ContHeader>
-                        <Button onClick={()=>{}} buttonStyle={buttonStyleEnum.GREY}>Изменить</Button>
+                        <Button onClick={() => {
+                        }} buttonStyle={buttonStyleEnum.GREY}>Изменить</Button>
                         <CardText contentEditable="true">{props.text}</CardText>
                         <Comments/>
                     </Content>
-                    <Button onClick={()=>{}} buttonStyle={buttonStyleEnum.STRING_GREY} style={{float: "right"}}>Удалить
+                    <Button onClick={() => {
+                    }} buttonStyle={buttonStyleEnum.STRING_GREY} style={{float: "right"}}>Удалить
                         карточку</Button>
                 </PopupCard>
             </Back>}

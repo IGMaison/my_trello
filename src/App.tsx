@@ -27,9 +27,10 @@ function App() {
                 trelloData,
                 setTrelloData,
                 setCardStatus,
-                setCardContent
+                setCardContent,
+                cardStatus,
             }}>
-            <Main>{console.log("td", trelloData)}
+            <Main>
                 {Object.keys(trelloData.columns).length > 0 ?
                     Object.keys(trelloData.columns).map(
                         (key) => <Column key={key} columnContent={trelloData.columns[key]}/>
