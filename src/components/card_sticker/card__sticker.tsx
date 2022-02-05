@@ -6,7 +6,8 @@ const CardSticker = ({cardInfo}: { cardInfo: any }) => {
     return (
         <StickerBase>
             <CardName>{cardInfo.name}</CardName>
-            <StickerProp>&#9776; &#128386;{(cardInfo.comments) ? cardInfo.comments.length : 0}</StickerProp>
+            <StickerProp>{(cardInfo.comments) ? <>&#9776;&nbsp;&nbsp;&nbsp;</> : ''}
+             &#128386; {(cardInfo.comments) ? cardInfo.comments.length : 0}</StickerProp>
         </StickerBase>
     );
 };
