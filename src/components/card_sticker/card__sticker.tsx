@@ -1,13 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 
-const CardSticker = () => {
-  return (
-    <StickerBase>
-      <CardName>Заголовок карточки</CardName>
-      <StickerProp>{"= {)14"}</StickerProp>
-    </StickerBase>
-  );
+const CardSticker = ({cardInfo}: { cardInfo: any }) => {
+
+    return (
+        <StickerBase>
+            <CardName>{cardInfo.name}</CardName>
+            <StickerProp>&#9776; &#128386;{(cardInfo.comments) ? cardInfo.comments.length : 0}</StickerProp>
+        </StickerBase>
+    );
 };
 
 export default CardSticker;
@@ -16,7 +17,7 @@ const StickerBase = styled.div`
   border: 0 white;
   box-sizing: border-box;
   color: black;
-  margin: 1em auto;
+  margin: 0.5em auto;
   font-size: 14px;
   overflow: hidden;
   padding: 8px;

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Column from "./components/column";
 import Card from "./components/card";
 import Welcome from "./components/welcome";
-import {dataType, emptyData} from "./components/services";
+import {emptyData} from "./components/services";
 
 function App() {
 
@@ -12,14 +12,9 @@ function App() {
     return (
         <Main>
             {Object.keys(trelloData.columns).length > 0 ?
-                Object.keys(trelloData.columns).map((key, index) => {
-                    return (
-                        <Column
-                            key={key}
-                            columnContent={trelloData.columns[key]}
-                        />
-                    )
-                })
+                Object.keys(trelloData.columns).map(
+                    (key)=> <Column key={key} columnContent={trelloData.columns[key]}/>
+                )
                 :
                 <>NOTHING TO SHOW</>}
             <Card/>

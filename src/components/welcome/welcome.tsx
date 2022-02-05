@@ -1,6 +1,6 @@
-import React, { SyntheticEvent, useState } from "react";
+import React, { SyntheticEvent, useState} from "react";
 import styled from "styled-components";
-import { dataType, storageService } from "../services/storage_service";
+import { dataType, storageService } from "../services";
 
 type Props = {
   changeUserName: (x: string) => void;
@@ -10,13 +10,13 @@ type Props = {
 const Welcome = ({ changeUserName, setData }: Props) => {
   const [name, changeName] = useState("");
 
-  const onChangeFn = (ev: any): void => {
+  const onChangeFn = (ev:  React.ChangeEvent<HTMLInputElement>): void => {
     changeName(ev.target.value);
   };
 
   const [display, changeDisplay] = useState({});
 
-  const submitFn = (ev: any) => {
+  const submitFn = (ev: SyntheticEvent) => {
     if (name) {
       changeUserName(name);
       setData(storageService(name));

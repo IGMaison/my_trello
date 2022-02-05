@@ -11,7 +11,8 @@ const Column = ({columnContent}: PropsType) => {
         <ColumnWrapper>
             <Content>
                 <ColumnTitle>{columnContent.title}</ColumnTitle>
-                <CardSticker/>
+                {columnContent.content.map((card)=><CardSticker cardInfo={card}/>)}
+
                 <Button buttonStyle={buttonStyleEnum.STRING_GREY}>+ Добавить карточку</Button>
             </Content>
         </ColumnWrapper>
