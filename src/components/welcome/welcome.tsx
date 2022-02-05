@@ -1,17 +1,45 @@
-import React from "react";
+import React, { SyntheticEvent, useState } from "react";
 import styled from "styled-components";
+import { dataType, storageService } from "../services/storage_service";
 
-const Welcome = () => {
-    return (
-        <Back>
-            <Popup>
-                <form>
-                    <Input name="userName" placeholder="Введите ваше имя здесь."/>
-                    <Submit type="submit" value={`Далее >`} onSubmit={() => {}}/>
-                </form>
-            </Popup>
-        </Back>
-    );
+type Props = {
+  changeUserName: (x: string) => void;
+  setData: (x: dataType) => void;
+};
+
+const Welcome = ({ changeUserName, setData }: Props) => {
+  const [name, changeName] = useState("");
+
+  const onChangeFn = (ev: any): void => {
+    changeName(ev.target.value);
+  };
+
+  const [display, changeDisplay] = useState({});
+
+  const submitFn = (ev: any) => {
+    if (name) {
+      changeUserName(name);
+      setData(storageService(name));
+      changeDisplay({ display: "none" });
+    }
+    ev.preventDefault();
+  };
+
+  return (
+    <Back style={display}>
+      <Popup>
+        <form onSubmit={submitFn}>
+          <Input
+            onChange={onChangeFn}
+            value={name}
+            name="userName"
+            placeholder="Введите ваше имя здесь."
+          />
+          <Submit type="submit" value={`Далее >`} />
+        </form>
+      </Popup>
+    </Back>
+  );
 };
 
 export default Welcome;

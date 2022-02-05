@@ -1,10 +1,8 @@
 export interface dataType {
-  user: string;
   columns: { [index: string]: { title: string; content: {}[] } };
 }
 
 export let emptyData: dataType = {
-  user: "",
   columns: {
     1: { title: "TODO", content: [] },
     2: { title: "IN PROGRESS", content: [] },

@@ -1,19 +1,26 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import Column from "./components/column";
 import Card from "./components/card";
 import Welcome from "./components/welcome";
+import {dataType} from "./components/services";
 
 function App() {
+    let emptyData: dataType;
+    emptyData = {
+        columns: {},
+    };
+    const [userName, changeUserName] = useState("");
+    const [trelloData, setTrelloData] = useState(emptyData);
 
     return (
         <Main>
-            <Column />
-            <Column />
-            <Column />
-            <Column />
-            <Card />
-            <Welcome />
+            <Column/>
+            <Column/>
+            <Column/>
+            <Column/>
+            <Card/>
+            <Welcome changeUserName={changeUserName} setData={setTrelloData}/>
         </Main>
     );
 }
