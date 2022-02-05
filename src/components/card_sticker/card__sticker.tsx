@@ -1,13 +1,20 @@
-import React from "react";
+import React, {useContext} from "react";
 import styled from "styled-components";
+import {Context} from "../../context";
+
 
 const CardSticker = ({cardInfo}: { cardInfo: any }) => {
+   const context: any = useContext(Context);
+   function CardStickerClick () : void {
+       context.setCardStatus(true);
+       context.setCardContent(cardInfo);
+   }
 
     return (
-        <StickerBase>
+        <StickerBase onClick={CardStickerClick}>
             <CardName>{cardInfo.name}</CardName>
             <StickerProp>{(cardInfo.comments) ? <>&#9776;&nbsp;&nbsp;&nbsp;</> : ''}
-             &#128386; {(cardInfo.comments) ? cardInfo.comments.length : 0}</StickerProp>
+                &#128386; {(cardInfo.comments) ? cardInfo.comments.length : 0}</StickerProp>
         </StickerBase>
     );
 };
@@ -32,6 +39,12 @@ const StickerBase = styled.div`
   min-height: 20px;
   text-decoration: none;
   text-align: left;
+  &:hover {
+    background-color: Azure;
+  }
+  &:active {
+    background-color: lightCyan;
+  };
 `;
 
 const CardName = styled.div`

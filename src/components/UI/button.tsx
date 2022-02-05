@@ -1,10 +1,11 @@
-import React from "react";
+import React, {MouseEventHandler} from "react";
 import styled from "styled-components";
 
 type PropsType = {
     buttonStyle: buttonStyleEnum,
     children: string;
     style?: object;
+    onClick: MouseEventHandler;
 }
 const Button = (props: PropsType) => {
     return (

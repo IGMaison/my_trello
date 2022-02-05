@@ -7,10 +7,10 @@ const Comment = () => {
   return (
     <CommentBody>
       Автор коммента:Автор
-      <Button buttonStyle={buttonStyleEnum.ORANGE} style={{float: "right"}}>X</Button>
+      <Button onClick={()=>{}} buttonStyle={buttonStyleEnum.ORANGE} style={{float: "right"}}>X</Button>
       <Post contentEditable="true">Коммент</Post>
-      <Button buttonStyle={buttonStyleEnum.GREY}>Изменить</Button>
-      <Button buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
+      <Button onClick={()=>{}} buttonStyle={buttonStyleEnum.GREY}>Изменить</Button>
+      <Button onClick={()=>{}} buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
       <br />
       <br />
     </CommentBody>

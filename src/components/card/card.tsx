@@ -1,26 +1,46 @@
-import React from "react";
+import React, {Fragment} from "react";
 import styled from "styled-components";
 import {Button} from "../UI";
 import {buttonStyleEnum} from "../UI";
 import Comments from "../comments";
 
-const Card = () => {
+type PropsType = {
+    comments: Array<object>,
+    id: number,
+    name: string,
+    text: string,
+    user: string,
+    cardStatus: boolean,
+    setCardContent: Function
+    setCardStatus: Function
+}
+
+const Card = (props: PropsType) => {
+
+    function clickClose() {
+        props.setCardStatus(false);
+    }
+
     return (
-        <Back>
-            <PopupCard>
-                <Button buttonStyle={buttonStyleEnum.ORANGE} style={{float: "right"}}>X</Button>
-                <CardName contentEditable={true}>Заголовок карточки</CardName>
-                <Button buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
-                <Author>Создал: Автор А.А.</Author>
-                <Content>
-                    <ContHeader>Описание</ContHeader>
-                    <Button buttonStyle={buttonStyleEnum.GREY}>Изменить</Button>
-                    <CardText contentEditable="true">Описание подробно</CardText>
-                    <Comments />
-                </Content>
-                <Button buttonStyle={buttonStyleEnum.STRING_GREY} style={{float: "right"}}>Удалить карточку</Button>
-            </PopupCard>
-        </Back>
+        <Fragment>
+            {props.cardStatus && <Back>
+                <PopupCard>
+                    <Button onClick={clickClose} buttonStyle={buttonStyleEnum.ORANGE} style={{float: "right"}}
+                            >X</Button>
+                    <CardName contentEditable={true}>{props.name}</CardName>
+                    <Button onClick={()=>{}} buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
+                    <Author>Создал: {props.user}</Author>
+                    <Content>
+                        <ContHeader>Описание</ContHeader>
+                        <Button onClick={()=>{}} buttonStyle={buttonStyleEnum.GREY}>Изменить</Button>
+                        <CardText contentEditable="true">{props.text}</CardText>
+                        <Comments/>
+                    </Content>
+                    <Button onClick={()=>{}} buttonStyle={buttonStyleEnum.STRING_GREY} style={{float: "right"}}>Удалить
+                        карточку</Button>
+                </PopupCard>
+            </Back>}
+        </Fragment>
     );
 };
 

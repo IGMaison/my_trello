@@ -9,7 +9,7 @@ const Comments = () => {
       <h2>Комментарии</h2>
       <CommentNew>
           <PostNew contentEditable="true">Тут будет новый коммент</PostNew>
-          <Button buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
+          <Button onClick={()=>{}} buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
           <br />
           <br />
       </CommentNew>
