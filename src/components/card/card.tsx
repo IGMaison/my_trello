@@ -4,8 +4,10 @@ import {Button} from "../UI";
 import {buttonStyleEnum} from "../UI";
 import Comments from "../comments";
 
+type CommentsType =  { id: number, text: string, user: string}
+
 type PropsType = {
-    comments: Array<object>,
+    comments: Array<CommentsType>,
     id: number,
     name: string,
     text: string,
@@ -20,14 +22,15 @@ const Card = (props: PropsType) => {
         props.setCardStatus(false);
     }
 
-    function escKeyDown(ev: KeyboardEvent) {
-        if (ev.key === "Escape") {
-            props.setCardStatus(false);
-
-        }
-    }
 
     useEffect(() => {
+        function escKeyDown(ev: KeyboardEvent) {
+            if (ev.key === "Escape") {
+                props.setCardStatus(false);
+                console.log(props.cardStatus)
+            }
+        }
+
         document.addEventListener("keydown", escKeyDown);
         return () => {
             document.removeEventListener("keydown", escKeyDown);
@@ -50,7 +53,7 @@ const Card = (props: PropsType) => {
                         <Button onClick={() => {
                         }} buttonStyle={buttonStyleEnum.GREY}>Изменить</Button>
                         <CardText contentEditable="true">{props.text}</CardText>
-                        <Comments/>
+                        <Comments comments={props.comments}/>
                     </Content>
                     <Button onClick={() => {
                     }} buttonStyle={buttonStyleEnum.STRING_GREY} style={{float: "right"}}>Удалить

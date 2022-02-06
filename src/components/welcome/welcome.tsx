@@ -1,10 +1,10 @@
-import React, { SyntheticEvent, useState} from "react";
+import React, {SetStateAction, SyntheticEvent, useState} from "react";
 import styled from "styled-components";
 import { dataType, storageService } from "../services";
 
 type Props = {
-  changeUserName: (x: string) => void;
-  setData: (x: dataType) => void;
+  changeUserName: React.SetStateAction<any>
+  setData: React.Dispatch<SetStateAction<dataType>>;
 };
 
 const Welcome = ({ changeUserName, setData }: Props) => {

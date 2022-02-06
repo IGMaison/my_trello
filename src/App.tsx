@@ -29,7 +29,7 @@ function App() {
                 setCardStatus,
                 setCardContent,
                 cardStatus,
-            }}>
+            }}>{console.log(userName, trelloData)}
             <Main>
                 {Object.keys(trelloData.columns).length > 0 ?
                     Object.keys(trelloData.columns).map(

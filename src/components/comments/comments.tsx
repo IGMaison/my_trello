@@ -3,7 +3,9 @@ import styled from "styled-components";
 import Comment from "./comment";
 import {Button, buttonStyleEnum} from "../UI";
 
-const Comments = () => {
+type CommentsType =  { id: number, text: string, user: string}
+
+const Comments = ( {comments}:{comments: Array<CommentsType>} ) => {
   return (
     <CommentsBlock>
       <h2>Комментарии</h2>
@@ -13,8 +15,7 @@ const Comments = () => {
           <br />
           <br />
       </CommentNew>
-      <Comment />
-      <Comment />
+        {comments ? comments.map((comment:any)=><Comment key={comment.id} {...comment}/>): 'Напишите здесь свой комментарий.'}
     </CommentsBlock>
   );
 };

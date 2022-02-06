@@ -3,12 +3,14 @@ import styled from "styled-components";
 import  {Button} from "../../UI";
 import {buttonStyleEnum} from "../../UI";
 
-const Comment = () => {
+type PropsType = { id: number, text: string, user: string }
+
+const Comment = (props: PropsType) => {
   return (
     <CommentBody>
-      Автор коммента:Автор
+      Автор коммента: {props.user}
       <Button onClick={()=>{}} buttonStyle={buttonStyleEnum.ORANGE} style={{float: "right"}}>X</Button>
-      <Post contentEditable="true">Коммент</Post>
+      <Post contentEditable="true">{props.text}</Post>
       <Button onClick={()=>{}} buttonStyle={buttonStyleEnum.GREY}>Изменить</Button>
       <Button onClick={()=>{}} buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
       <br />
