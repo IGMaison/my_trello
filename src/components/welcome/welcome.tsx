@@ -1,45 +1,45 @@
 import React, {SetStateAction, SyntheticEvent, useState} from "react";
 import styled from "styled-components";
-import { dataType, storageService } from "../services";
+import {dataType, storageService} from "../services";
 
 type Props = {
-  changeUserName: React.SetStateAction<any>
-  setData: React.Dispatch<SetStateAction<dataType>>;
+    changeUserName: React.SetStateAction<any>
+    setData: React.Dispatch<SetStateAction<dataType>>;
 };
 
-const Welcome = ({ changeUserName, setData }: Props) => {
-  const [name, changeName] = useState("");
+const Welcome = ({changeUserName, setData}: Props) => {
+    const [name, changeName] = useState("");
 
-  const onChangeFn = (ev:  React.ChangeEvent<HTMLInputElement>): void => {
-    changeName(ev.target.value);
-  };
+    const onChangeFn = (ev: React.ChangeEvent<HTMLInputElement>): void => {
+        changeName(ev.target.value);
+    };
 
-  const [display, changeDisplay] = useState({});
+    const [display, changeDisplay] = useState({});
 
-  const submitFn = (ev: SyntheticEvent) => {
-    if (name) {
-      changeUserName(name);
-      setData(storageService(name));
-      changeDisplay({ display: "none" });
-    }
-    ev.preventDefault();
-  };
+    const submitFn = (ev: SyntheticEvent) => {
+        if (name) {
+            changeUserName(name);
+            setData(storageService(name));
+            changeDisplay({display: "none"});
+        }
+        ev.preventDefault();
+    };
 
-  return (
-    <Back style={display}>
-      <Popup>
-        <form onSubmit={submitFn}>
-          <Input
-            onChange={onChangeFn}
-            value={name}
-            name="userName"
-            placeholder="Введите ваше имя здесь."
-          />
-          <Submit type="submit" value={`Далее >`} />
-        </form>
-      </Popup>
-    </Back>
-  );
+    return (
+        <Back style={display}>
+            <Popup>
+                <form onSubmit={submitFn}>
+                    <Input
+                        onChange={onChangeFn}
+                        value={name}
+                        name="userName"
+                        placeholder="Введите ваше имя здесь."
+                    />
+                    <Submit type="submit" value={`Далее >`}/>
+                </form>
+            </Popup>
+        </Back>
+    );
 };
 
 export default Welcome;

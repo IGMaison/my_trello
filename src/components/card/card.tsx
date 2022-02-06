@@ -4,7 +4,7 @@ import {Button} from "../UI";
 import {buttonStyleEnum} from "../UI";
 import Comments from "../comments";
 
-type CommentsType =  { id: number, text: string, user: string}
+type CommentsType = { id: number, text: string, user: string }
 
 type PropsType = {
     comments: Array<CommentsType>,

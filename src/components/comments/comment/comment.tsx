@@ -1,22 +1,25 @@
 import React from "react";
 import styled from "styled-components";
-import  {Button} from "../../UI";
+import {Button} from "../../UI";
 import {buttonStyleEnum} from "../../UI";
 
 type PropsType = { id: number, text: string, user: string }
 
 const Comment = (props: PropsType) => {
-  return (
-    <CommentBody>
-      Автор коммента: {props.user}
-      <Button onClick={()=>{}} buttonStyle={buttonStyleEnum.ORANGE} style={{float: "right"}}>X</Button>
-      <Post contentEditable="true">{props.text}</Post>
-      <Button onClick={()=>{}} buttonStyle={buttonStyleEnum.GREY}>Изменить</Button>
-      <Button onClick={()=>{}} buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
-      <br />
-      <br />
-    </CommentBody>
-  );
+    return (
+        <CommentBody>
+            Автор коммента: {props.user}
+            <Button onClick={() => {
+            }} buttonStyle={buttonStyleEnum.ORANGE} style={{float: "right"}}>X</Button>
+            <Post contentEditable="true">{props.text}</Post>
+            <Button onClick={() => {
+            }} buttonStyle={buttonStyleEnum.GREY}>Изменить</Button>
+            <Button onClick={() => {
+            }} buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
+            <br/>
+            <br/>
+        </CommentBody>
+    );
 };
 
 export default Comment;
