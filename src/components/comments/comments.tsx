@@ -10,7 +10,7 @@ const Comments = ({comments}: { comments: Array<CommentsType> }) => {
 
     const emptyComment = "Коммент писать здесь";
     let newText = React.createRef<any>();
-    const [buttonVisibility, setButtonVisibility] = useState({display:"none"});
+    const [buttonVisibility, setButtonVisibility] = useState({display: "none"});
 
     const clearRef = (ev: SyntheticEvent) => {
         newText.current.style.color = 'black';
@@ -22,8 +22,10 @@ const Comments = ({comments}: { comments: Array<CommentsType> }) => {
     };
 
     const restoreRef = (ev: SyntheticEvent) => {
-        if (!newText.current.textContent) {newText.current.textContent = emptyComment;
-        setButtonVisibility({display: "none"});}
+        if (!newText.current.textContent) {
+            newText.current.textContent = emptyComment;
+            setButtonVisibility({display: "none"});
+        }
         newText.current.style.color = 'grey';
     };
     const saveNewComment = (ev: React.MouseEvent<Element>) => {
@@ -39,7 +41,8 @@ const Comments = ({comments}: { comments: Array<CommentsType> }) => {
                          onBlur={restoreRef}
                          onFocus={clearRef}>{emptyComment}
                 </PostNew>
-                <Button onClick={saveNewComment} style={buttonVisibility} buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
+                <Button onClick={saveNewComment} style={buttonVisibility}
+                        buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
                 <br/>
                 <br/>
             </CommentNew>
@@ -83,4 +86,5 @@ const PostNew = styled.div`
   border: solid 1px #daa;
   width: 100%;
   text-align: left;
+  }
 `;

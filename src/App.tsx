@@ -13,10 +13,10 @@ function App() {
     const [cardStatus, setCardStatus] = useState(false);
     const [cardContent, setCardContent] = useState({
             comments: [],
-            id: 0,
-            name: "name0",
-            text: "text0",
-            user: "userName"
+            id: "",
+            name: "",
+            text: "",
+            user: ""
         }
     );
 
@@ -33,7 +33,7 @@ function App() {
             <Main>
                 {Object.keys(trelloData.columns).length > 0 ?
                     Object.keys(trelloData.columns).map(
-                        (key) => <Column key={key} columnContent={trelloData.columns[key]}/>
+                        (key) => <Column key={key} id={key} columnContent={trelloData.columns[key]}/>
                     )
                     :
                     <>NOTHING TO SHOW</>}

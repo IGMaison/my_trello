@@ -10,12 +10,22 @@ const Comment = (props: PropsType) => {
         <CommentBody>
             Автор коммента: {props.user}
             <Button onClick={() => {
-            }} buttonStyle={buttonStyleEnum.ORANGE} style={{float: "right"}}>X</Button>
+            }}
+                    buttonStyle={buttonStyleEnum.ORANGE}
+                    style={{float: "right"}}>
+                X
+            </Button>
             <Post contentEditable="true">{props.text}</Post>
             <Button onClick={() => {
-            }} buttonStyle={buttonStyleEnum.GREY}>Изменить</Button>
+            }}
+                    buttonStyle={buttonStyleEnum.GREY}>
+                Изменить
+            </Button>
             <Button onClick={() => {
-            }} buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
+            }}
+                    buttonStyle={buttonStyleEnum.ORANGE}>
+                Сохранить
+            </Button>
             <br/>
             <br/>
         </CommentBody>

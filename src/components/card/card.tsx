@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect} from "react";
+import React, {Fragment, useEffect, useState} from "react";
 import styled from "styled-components";
 import {Button} from "../UI";
 import {buttonStyleEnum} from "../UI";
@@ -8,26 +8,69 @@ type CommentsType = { id: number, text: string, user: string }
 
 type PropsType = {
     comments: Array<CommentsType>,
-    id: number,
+    id: string,
     name: string,
     text: string,
     user: string,
+    hideComments?: boolean,
     cardStatus: boolean,
     setCardContent: Function
     setCardStatus: Function
 }
 
 const Card = (props: PropsType) => {
-    function clickClose() {
+
+    const emptyText = "Подробного описания нет, но прямо здесь его можно написать.";
+    const emptyName = "Новый заголовок";
+    let newText = React.createRef<any>();
+    let newName = React.createRef<any>();
+    const [buttonVisibility, setButtonVisibility] = useState({display: "none"});
+
+    const clearRef = () => {
+        newText.current.style.backgroundColor = 'white';
+        setButtonVisibility({display: "block"})
+        if (newText.current.textContent == emptyText) {
+            newText.current.textContent = ""
+        }
+    };
+
+    const restoreRef = () => {
+        if (!newText.current.textContent) {
+            newText.current.textContent = emptyText;
+        }
+        newText.current.style.backgroundColor = '#ebecf0';
+    };
+
+    const clickClose = () => {
+        setButtonVisibility({display: "none"});
         props.setCardStatus(false);
     }
 
+    const restoreRefName = () => {
+        if (!newName.current.textContent) {
+            newName.current.textContent = emptyName;
+        }
+        newName.current.style.backgroundColor = '#ebecf0';
+    };
+    const clearRefName = () => {
+        newName.current.style.backgroundColor = 'white';
+        setButtonVisibility({display: "block"})
+        if (newName.current.textContent == emptyName) {
+            newName.current.textContent = ""
+        }
+    };
+
+    function saveCard() {
+        clickClose()
+    }
 
     useEffect(() => {
         function escKeyDown(ev: KeyboardEvent) {
             if (ev.key === "Escape") {
+                setButtonVisibility({display: "none"});
                 props.setCardStatus(false);
-                console.log(props.cardStatus)
+
+                console.log("sss", props.cardStatus)
             }
         }
 
@@ -35,29 +78,43 @@ const Card = (props: PropsType) => {
         return () => {
             document.removeEventListener("keydown", escKeyDown);
         };
-    }, []);
-
+    }, [1]);
 
     return (
         <Fragment>
             {props.cardStatus && <Back>
                 <PopupCard>
-                    <Button onClick={clickClose} buttonStyle={buttonStyleEnum.ORANGE} style={{float: "right"}}
+                    <Button onClick={clickClose}
+                            buttonStyle={buttonStyleEnum.ORANGE}
+                            style={{float: "right"}}
                     >X</Button>
-                    <CardName contentEditable={true}>{props.name}</CardName>
-                    <Button onClick={() => {
-                    }} buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
+                    <CardName ref={newName}
+                              onBlur={restoreRefName}
+                              onFocus={clearRefName}
+                              contentEditable={true}>
+                        {props.name ? props.name : emptyName}
+                    </CardName>
+                    <Button onClick={saveCard}
+                            buttonStyle={buttonStyleEnum.ORANGE}
+                            style={buttonVisibility}>
+                        Сохранить карточку
+                    </Button>
                     <Author>Создал: {props.user}</Author>
                     <Content>
                         <ContHeader>Описание</ContHeader>
-                        <Button onClick={() => {
-                        }} buttonStyle={buttonStyleEnum.GREY}>Изменить</Button>
-                        <CardText contentEditable="true">{props.text}</CardText>
-                        <Comments comments={props.comments}/>
+                        <CardText ref={newText}
+                                  onBlur={restoreRef}
+                                  onFocus={clearRef}
+                                  contentEditable="true">
+                            {props.text ? props.text : emptyText}
+                        </CardText>
+                        {props.hideComments || <Comments comments={props.comments}/>}
                     </Content>
                     <Button onClick={() => {
-                    }} buttonStyle={buttonStyleEnum.STRING_GREY} style={{float: "right"}}>Удалить
-                        карточку</Button>
+                    }}
+                            buttonStyle={buttonStyleEnum.STRING_GREY}
+                            style={{float: "right"}}>
+                        Удалить карточку</Button>
                 </PopupCard>
             </Back>}
         </Fragment>
@@ -70,7 +127,6 @@ const Back = styled.div`
   position: absolute;
   min-width: 100%;
   min-height: 100vh;
-  overflow: hidden;
   margin: 0;
   padding: 0;
   right: 0;
@@ -96,13 +152,17 @@ const PopupCard = styled.div`
 `;
 
 const CardName = styled.div`
+  cursor: pointer;
   font-weight: 700;
-  margin: 0;
+  margin: 0 0 0.2rem;
   padding: 1px;
   font-size: 24px;
   line-height: 1.3em;
   position: relative;
   display: flow-root;
+  &:hover {
+    background-color: #dadbe0;
+  }
 `;
 
 const Author = styled.div`
@@ -116,10 +176,14 @@ const ContHeader = styled.h2`
 `;
 
 const CardText = styled.div`
+  cursor: pointer;
   margin: 1em;
   padding: 2px;
   border: #ccc 1px;
   border-style: none none solid solid;
+  &:hover {
+    background-color: #dadbe0;
+  }
 `;
 
 const Content = styled.div`
