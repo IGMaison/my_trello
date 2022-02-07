@@ -11,16 +11,17 @@ export let emptyData: dataType = {
     },
 };
 
-export function storageService(name: string, data?: dataType): dataType {
+export function storageService(data?: dataType): dataType {
     let localStorage = window.localStorage;
+    const baseName = 't';
     if (data) {
-        localStorage[name] = JSON.stringify(data);
+        localStorage[baseName] = JSON.stringify(data);
         return data;
     } else {
-        if (name in localStorage) {
-            return JSON.parse(localStorage[name]);
+        if (baseName in localStorage) {
+            return JSON.parse(localStorage[baseName]);
         }
     }
-    localStorage[name] = JSON.stringify(emptyData);
+    localStorage[baseName] = JSON.stringify(emptyData);
     return emptyData;
 }

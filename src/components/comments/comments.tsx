@@ -15,14 +15,14 @@ const Comments = ({comments}: { comments: Array<CommentsType> }) => {
     const clearRef = (ev: SyntheticEvent) => {
         newText.current.style.color = 'black';
         setButtonVisibility({display: "block"});
-        if (newText.current.textContent == emptyComment) {
+        if (newText.current.textContent.trim() == emptyComment) {
             newText.current.textContent = ""
             console.log(newText.current);
         }
     };
 
     const restoreRef = (ev: SyntheticEvent) => {
-        if (!newText.current.textContent) {
+        if (!newText.current.textContent.trim()) {
             newText.current.textContent = emptyComment;
             setButtonVisibility({display: "none"});
         }

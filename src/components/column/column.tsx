@@ -10,8 +10,9 @@ type PropsType = { id: string, columnContent: { title: string, content: Array<ob
 const Column = ({id, columnContent}: PropsType) => {
 
     const context: any = useContext(Context);
-    const cardInfo = {
-        id: Date.now().toString(),
+    const newCardInfo = {
+        id: Date.now(),
+        columnId: id,
         name: "",
         text: "",
         user: context.userName,
@@ -22,7 +23,7 @@ const Column = ({id, columnContent}: PropsType) => {
 
     function addCard() {
         context.setCardStatus(true);
-        context.setCardContent(cardInfo);
+        context.setCardContent(newCardInfo);
     }
 
     return (

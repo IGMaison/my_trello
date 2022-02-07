@@ -1,14 +1,16 @@
-import React, {Fragment, useEffect, useState} from "react";
+import React, {Fragment, useContext, useEffect, useState} from "react";
 import styled from "styled-components";
 import {Button} from "../UI";
 import {buttonStyleEnum} from "../UI";
 import Comments from "../comments";
+import {Context} from "../../context";
 
 type CommentsType = { id: number, text: string, user: string }
 
 type PropsType = {
     comments: Array<CommentsType>,
-    id: string,
+    id: number,
+    columnId: string;
     name: string,
     text: string,
     user: string,
@@ -19,7 +21,9 @@ type PropsType = {
 }
 
 const Card = (props: PropsType) => {
-
+    const context: any = useContext(Context);
+    console.count("Card");
+    console.log("ci", props);
     const emptyText = "Подробного описания нет, но прямо здесь его можно написать.";
     const emptyName = "Новый заголовок";
     let newText = React.createRef<any>();
@@ -29,13 +33,13 @@ const Card = (props: PropsType) => {
     const clearRef = () => {
         newText.current.style.backgroundColor = 'white';
         setButtonVisibility({display: "block"})
-        if (newText.current.textContent == emptyText) {
+        if (newText.current.textContent.trim() == emptyText) {
             newText.current.textContent = ""
         }
     };
 
     const restoreRef = () => {
-        if (!newText.current.textContent) {
+        if (!newText.current.textContent.trim()) {
             newText.current.textContent = emptyText;
         }
         newText.current.style.backgroundColor = '#ebecf0';
@@ -47,20 +51,32 @@ const Card = (props: PropsType) => {
     }
 
     const restoreRefName = () => {
-        if (!newName.current.textContent) {
+        if (!newName.current.textContent.trim()) {
             newName.current.textContent = emptyName;
+            setButtonVisibility({display: "none"});
         }
         newName.current.style.backgroundColor = '#ebecf0';
     };
     const clearRefName = () => {
         newName.current.style.backgroundColor = 'white';
         setButtonVisibility({display: "block"})
-        if (newName.current.textContent == emptyName) {
+        if (newName.current.textContent.trim() == emptyName) {
             newName.current.textContent = ""
         }
     };
 
     function saveCard() {
+        if (newName.current.textContent.trim() == emptyName || !newName.current.textContent.trim()) {
+            return
+        }
+        const newCardInfo = {
+            id: props.id,
+            name: newName.current.textContent,
+            user: props.user,
+            text: newText.current.textContent.trim() == emptyText ? '' : newText.current.textContent,
+        }
+        context.trelloData.columns[props.columnId].content.push(newCardInfo);
+
         clickClose()
     }
 

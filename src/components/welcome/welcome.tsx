@@ -17,9 +17,9 @@ const Welcome = ({changeUserName, setData}: Props) => {
     const [display, changeDisplay] = useState({});
 
     const submitFn = (ev: SyntheticEvent) => {
-        if (name) {
-            changeUserName(name);
-            setData(storageService(name));
+        if (name.trim()) {
+            changeUserName(name.replace(/\s+/g, ' ').trim());
+            setData(storageService());
             changeDisplay({display: "none"});
         }
         ev.preventDefault();
