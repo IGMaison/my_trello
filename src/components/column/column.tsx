@@ -9,6 +9,7 @@ type PropsType = { id: string, columnContent: { title: string, content: Array<ob
 
 const Column = ({id, columnContent}: PropsType) => {
 
+    {/* TODO: any  */}
     const context: any = useContext(Context);
     const newCardInfo = {
         id: Date.now(),
@@ -30,6 +31,7 @@ const Column = ({id, columnContent}: PropsType) => {
         <ColumnWrapper>
             <Content>
                 <ColumnTitle>{columnContent.title}</ColumnTitle>
+                {/* TODO: any  */}
                 {columnContent.content.map((card: any) => <CardSticker key={card.id} cardInfo={card}/>)}
 
                 <Button onClick={addCard} buttonStyle={buttonStyleEnum.STRING_GREY}>+ Добавить карточку</Button>
@@ -53,6 +55,7 @@ const ColumnWrapper = styled.div`
   margin: 8px;
 `;
 
+{/* TODO: два раза padding  */}
 const ColumnTitle = styled.div`
   color: black;
   margin: 0;

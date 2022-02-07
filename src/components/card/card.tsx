@@ -8,6 +8,7 @@ import {Context} from "../../context";
 type CommentsType = { id: number, text: string, user: string }
 
 type PropsType = {
+    // TODO: можно писать не Array<CommentsType>, а CommentsType[]
     comments: Array<CommentsType>,
     id: number,
     columnId: string;
@@ -16,20 +17,29 @@ type PropsType = {
     user: string,
     hideComments?: boolean,
     cardStatus: boolean,
+    //TODO: Function должны быть явно типизированы
     setCardContent: Function
     setCardStatus: Function
 }
 
 const Card = (props: PropsType) => {
+    //TODO: any
     const context: any = useContext(Context);
+
+    //TODO: консоль логи?
     console.count("Card");
     console.log("ci", props);
+    //TODO: зачем эти константы?
     const emptyText = "Подробного описания нет, но прямо здесь его можно написать.";
     const emptyName = "Новый заголовок";
+    //TODO: два раза рефы any, и сам нейминг рефов, как будто бы ты их используешь не по назначению рефа,
+    // в рефах должны лежать компоненты а не строчки
     let newText = React.createRef<any>();
     let newName = React.createRef<any>();
+    //TODO: опять стейт со стилями
     const [buttonVisibility, setButtonVisibility] = useState({display: "none"});
 
+    //TODO: нейминги ни говорящие ни о чем
     const clearRef = () => {
         newText.current.style.backgroundColor = 'white';
         setButtonVisibility({display: "block"})
@@ -45,11 +55,13 @@ const Card = (props: PropsType) => {
         newText.current.style.backgroundColor = '#ebecf0';
     };
 
+    //TODO: наверное это onClose и setVisibility должен работать с boolean стейтом
     const clickClose = () => {
         setButtonVisibility({display: "none"});
         props.setCardStatus(false);
     }
 
+    //TODO: такая же беда как и выше с функциями по рефам
     const restoreRefName = () => {
         if (!newName.current.textContent.trim()) {
             newName.current.textContent = emptyName;
@@ -96,6 +108,7 @@ const Card = (props: PropsType) => {
         };
     }, [1]);
 
+    //TODO: блоки верстки лучше разделять пробелами по логическим блокам
     return (
         <Fragment>
             {props.cardStatus && <Back>

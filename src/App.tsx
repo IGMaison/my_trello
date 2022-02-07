@@ -11,6 +11,7 @@ function App() {
     const [userName, changeUserName] = useState("");
     const [trelloData, setTrelloData] = useState(emptyData);
     const [cardStatus, setCardStatus] = useState(false);
+    //TODO: если стейт объект,то типизируем
     const [cardContent, setCardContent] = useState({
             comments: [],
             columnId: "",
@@ -21,6 +22,7 @@ function App() {
         }
     );
 
+    //TODO: в App должны происходить глобальные вещи, т.е. в нашем случае это контекст и рендер компонента Dashboard к пр.
     return (
         <Context.Provider
             value={{
@@ -31,6 +33,7 @@ function App() {
                 setCardContent,
                 cardStatus,
             }}>{console.log(userName, trelloData)}
+            {/* TODO: Что тут забыл console.log ?*/}
             <Main>
                 {Object.keys(trelloData.columns).length > 0 ?
                     Object.keys(trelloData.columns).map(
@@ -48,6 +51,7 @@ function App() {
 
 export default App;
 
+//TODO: я так понимаю ты стили откуда то копировал и поэтому они не в правильном написании... Перепиши стили, и старайся их писать сам
 const Main = styled.div`
     backgroundColor: #282c34;
     minHeight: 100vh;

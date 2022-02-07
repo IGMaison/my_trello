@@ -10,12 +10,15 @@ type Props = {
 const Welcome = ({changeUserName, setData}: Props) => {
     const [name, changeName] = useState("");
 
+    //TODO: можно называть просто onChange, приставка Fn не несет доп инфы
     const onChangeFn = (ev: React.ChangeEvent<HTMLInputElement>): void => {
         changeName(ev.target.value);
     };
 
+    //TODO: если стейт это объект, то его обязательно нужно типизовать
     const [display, changeDisplay] = useState({});
 
+    //TODO: onSubmit
     const submitFn = (ev: SyntheticEvent) => {
         if (name.trim()) {
             changeUserName(name.replace(/\s+/g, ' ').trim());
@@ -26,6 +29,11 @@ const Welcome = ({changeUserName, setData}: Props) => {
     };
 
     return (
+        /**
+            TODO: стоит избегать передачи пропса style, если тебе нужно пропсами менять стили StyledComponent,
+            то используй средства StyledComponent,
+            об этом можешь почитать в доке
+        */
         <Back style={display}>
             <Popup>
                 <form onSubmit={submitFn}>
@@ -44,6 +52,7 @@ const Welcome = ({changeUserName, setData}: Props) => {
 
 export default Welcome;
 
+//TODO: не понятно, что такое Back, не говорящее имя
 const Back = styled.div`
   visibility: visible;
   position: absolute;

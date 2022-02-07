@@ -12,6 +12,7 @@ const Comment = (props: PropsType) => {
             <Button onClick={() => {
             }}
                     buttonStyle={buttonStyleEnum.ORANGE}
+                    // TODO: опять же тег style
                     style={{float: "right"}}>
                 X
             </Button>
@@ -42,6 +43,7 @@ const CommentBody = styled.div`
   width: 100%;
 `;
 
+{/* TODO: два раза border  */}
 const Post = styled.div`
   border: 0 white;
   box-sizing: border-box;

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {Context} from "../../context";
 
 
+{/* TODO: any 2 раза  */}
 const CardSticker = ({cardInfo}: { cardInfo: any }) => {
    const context: any = useContext(Context);
    function CardStickerClick () : void {
@@ -13,6 +14,7 @@ const CardSticker = ({cardInfo}: { cardInfo: any }) => {
     return (
         <StickerBase onClick={CardStickerClick}>
             <CardName>{cardInfo.name}</CardName>
+            {/* TODO: очень странное кол-во спец символов  */}
             <StickerProp>{(cardInfo.comments) ? <>&#9776;&nbsp;&nbsp;&nbsp;</> : ''}
                 &#128386; {(cardInfo.comments) ? cardInfo.comments.length : 0}</StickerProp>
         </StickerBase>

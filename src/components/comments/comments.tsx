@@ -5,18 +5,22 @@ import {Button, buttonStyleEnum} from "../UI";
 
 type CommentsType = { id: number, text: string, user: string }
 
-
+//TODO: компоненты Comments и Comment, будут плохо различичмы при поверхностном просмотре проекта. Comment лучше назвать CommentsList
 const Comments = ({comments}: { comments: Array<CommentsType> }) => {
 
     const emptyComment = "Коммент писать здесь";
+    //TODO: ref должен быть типизирован
     let newText = React.createRef<any>();
     const [buttonVisibility, setButtonVisibility] = useState({display: "none"});
 
     const clearRef = (ev: SyntheticEvent) => {
+        //TODO: если хочешь менять стили, то делаешь средствами StyledComponents, а не через ref
+        // получается что, ты игнорируешь лвиную долю функционала StyledComponents
         newText.current.style.color = 'black';
         setButtonVisibility({display: "block"});
         if (newText.current.textContent.trim() == emptyComment) {
             newText.current.textContent = ""
+            //TODO: console.log нужно удалять, если функционал готов
             console.log(newText.current);
         }
     };
@@ -43,9 +47,11 @@ const Comments = ({comments}: { comments: Array<CommentsType> }) => {
                 </PostNew>
                 <Button onClick={saveNewComment} style={buttonVisibility}
                         buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
+                {/* TODO: br это плохой тон  */}
                 <br/>
                 <br/>
             </CommentNew>
+            {/* TODO: any  */}
             {comments ? comments.map((comment: any) => <Comment
                 key={comment.id} {...comment}/>) : 'Напишите свой комментарий.'}
         </CommentsBlock>
