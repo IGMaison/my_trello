@@ -1,41 +1,46 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import CardSticker from "../card_sticker";
-import {Button} from "../UI";
-import {buttonStyleEnum} from "../UI";
-import {Context} from "../../context";
+import { Button } from "../UI";
+import { buttonStyleEnum } from "../UI";
+import { Context } from "../../context";
 
-type PropsType = { id: string, columnContent: { title: string, content: Array<object> } }
+type PropsType = {
+  id: string;
+  columnContent: { title: string; content: Array<object> };
+};
 
-const Column = ({id, columnContent}: PropsType) => {
+const Column = ({ id, columnContent }: PropsType) => {
+  const context: any = useContext(Context);
+  const newCardInfo = {
+    id: Date.now(),
+    columnId: id,
+    name: "",
+    text: "",
+    user: context.userName,
+    hideComments: true,
+  };
 
-    const context: any = useContext(Context);
-    const newCardInfo = {
-        id: Date.now(),
-        columnId: id,
-        name: "",
-        text: "",
-        user: context.userName,
-        hideComments: true,
-    }
+  function addCard() {
+    context.setCardStatus(true);
+    context.setCardContent(newCardInfo);
+  }
 
+  return (
+    <ColumnWrapper>
+      <Content>
+        <ColumnTitle>{columnContent.title}</ColumnTitle>
 
+        {columnContent.content.map((card: any) => (
+          <CardSticker key={card.id} cardInfo={{ columnId: id, ...card }} />
+        ))}
 
-    function addCard() {
-        context.setCardStatus(true);
-        context.setCardContent(newCardInfo);
-    }
-
-    return (
-        <ColumnWrapper>
-            <Content>
-                <ColumnTitle>{columnContent.title}</ColumnTitle>
-                {columnContent.content.map((card: any) => <CardSticker key={card.id} cardInfo={card}/>)}
-
-                <Button onClick={addCard} buttonStyle={buttonStyleEnum.STRING_GREY}>+ Добавить карточку</Button>
-            </Content>
-        </ColumnWrapper>
-    );
+        <Button onClick={addCard} buttonStyle={buttonStyleEnum.STRING_GREY}>
+          + Добавить карточку
+        </Button>
+      </Content>
+    </ColumnWrapper>
+  );
 };
 
 export default Column;

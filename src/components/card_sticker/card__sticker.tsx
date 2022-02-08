@@ -1,22 +1,27 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
-import {Context} from "../../context";
+import { Context } from "../../context";
 
+const CardSticker = ({ cardInfo }: { cardInfo: any }) => {
+  const context: any = useContext(Context);
 
-const CardSticker = ({cardInfo}: { cardInfo: any }) => {
-   const context: any = useContext(Context);
-   function CardStickerClick () : void {
-       context.setCardStatus(true);
-       context.setCardContent(cardInfo);
-   }
+  function CardStickerClick(): void {
+    context.setCardContent(cardInfo);
+    context.setCardStatus(true);
+  }
 
-    return (
-        <StickerBase onClick={CardStickerClick}>
-            <CardName>{cardInfo.name}</CardName>
-            <StickerProp>{(cardInfo.comments) ? <>&#9776;&nbsp;&nbsp;&nbsp;</> : ''}
-                &#128386; {(cardInfo.comments) ? cardInfo.comments.length : 0}</StickerProp>
-        </StickerBase>
-    );
+  let isCardInfo = cardInfo.text ? <>&#9776;</> : "";
+  let commentsNumber = cardInfo.comments ? cardInfo.comments.length : 0;
+
+  return (
+    <StickerBase onClick={CardStickerClick}>
+      <CardName>{cardInfo.name}</CardName>
+
+      <StickerProp>
+        {isCardInfo}&nbsp;&nbsp;&nbsp;&#9993; {commentsNumber}
+      </StickerProp>
+    </StickerBase>
+  );
 };
 
 export default CardSticker;
@@ -44,7 +49,7 @@ const StickerBase = styled.div`
   }
   &:active {
     background-color: lightCyan;
-  };
+  }
 `;
 
 const CardName = styled.div`
