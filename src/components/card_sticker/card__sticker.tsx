@@ -10,15 +10,20 @@ const CardSticker = ({ cardInfo }: { cardInfo: any }) => {
     context.setCardStatus(true);
   }
 
-  let isCardInfo = cardInfo.text ? <>&#9776;</> : "";
-  let commentsNumber = cardInfo.comments ? cardInfo.comments.length : 0;
+  let isCardInfo = cardInfo.text ? <>&#9776;&nbsp;&nbsp;&nbsp;</> : "";
+  let commentsNumber = cardInfo.comments ? (
+    <>&#9993; {cardInfo.comments.length}</>
+  ) : (
+    0
+  );
 
   return (
     <StickerBase onClick={CardStickerClick}>
       <CardName>{cardInfo.name}</CardName>
 
       <StickerProp>
-        {isCardInfo}&nbsp;&nbsp;&nbsp;&#9993; {commentsNumber}
+        {isCardInfo}
+        {commentsNumber}
       </StickerProp>
     </StickerBase>
   );

@@ -1,55 +1,116 @@
-import React, {SyntheticEvent, useRef, useState} from "react";
+import React, { SyntheticEvent, useContext, useRef, useState } from "react";
 import styled from "styled-components";
 import Comment from "./comment";
-import {Button, buttonStyleEnum} from "../UI";
+import { Button, buttonStyleEnum } from "../UI";
+import { Context } from "../../context";
+import { storageService } from "../services";
 
-type CommentsType = { id: number, text: string, user: string }
+type CommentsType = { id: number; text: string; user: string };
 
+const Comments = ({
+  comments,
+  columnId,
+  cardArrIdx,
+}: {
+  columnId: string;
+  cardArrIdx: number;
+  comments: Array<CommentsType>;
+}) => {
+  const context: any = useContext(Context);
+  const emptyComment = "Коммент писать здесь";
+  let newComment = React.createRef<any>();
+  const [buttonVisibility, setButtonVisibility] = useState({ display: "none" });
 
-const Comments = ({comments}: { comments: Array<CommentsType> }) => {
+  const clearNewComment = (ev: SyntheticEvent) => {
+    newComment.current.style.color = "black";
+    setButtonVisibility({ display: "block" });
+    if (newComment.current.textContent.trim() == emptyComment) {
+      newComment.current.textContent = "";
+      console.log(newComment.current);
+    }
+  };
 
-    const emptyComment = "Коммент писать здесь";
-    let newText = React.createRef<any>();
-    const [buttonVisibility, setButtonVisibility] = useState({display: "none"});
+  const restoreNewComment = (ev: SyntheticEvent) => {
+    if (!newComment.current.textContent.trim()) {
+      newComment.current.textContent = emptyComment;
+      setButtonVisibility({ display: "none" });
+    }
+    newComment.current.style.color = "grey";
+  };
+  const saveNewComment = (ev: React.MouseEvent<Element>) => {
+    console.log("inner", newComment.current.textContent);
 
-    const clearRef = (ev: SyntheticEvent) => {
-        newText.current.style.color = 'black';
-        setButtonVisibility({display: "block"});
-        if (newText.current.textContent.trim() == emptyComment) {
-            newText.current.textContent = ""
-            console.log(newText.current);
-        }
-    };
-
-    const restoreRef = (ev: SyntheticEvent) => {
-        if (!newText.current.textContent.trim()) {
-            newText.current.textContent = emptyComment;
-            setButtonVisibility({display: "none"});
-        }
-        newText.current.style.color = 'grey';
-    };
-    const saveNewComment = (ev: React.MouseEvent<Element>) => {
-        console.log("inner", newText.current.textContent);
+    if (
+      newComment.current.textContent.trim() == emptyComment ||
+      !newComment.current.textContent.trim()
+    ) {
+      return;
     }
 
+    const newCommentInfo = {
+      id: Date.now(),
+      text: newComment.current.textContent,
+      user: context.userName,
+    };
 
-    return (
-        <CommentsBlock>
-            <h2>Комментарии</h2>
-            <CommentNew>
-                <PostNew ref={newText} contentEditable="true"
-                         onBlur={restoreRef}
-                         onFocus={clearRef}>{emptyComment}
-                </PostNew>
-                <Button onClick={saveNewComment} style={buttonVisibility}
-                        buttonStyle={buttonStyleEnum.ORANGE}>Сохранить</Button>
-                <br/>
-                <br/>
-            </CommentNew>
-            {comments ? comments.map((comment: any) => <Comment
-                key={comment.id} {...comment}/>) : 'Напишите свой комментарий.'}
-        </CommentsBlock>
-    );
+    if (context.trelloData.columns[columnId].content[cardArrIdx].comments) {
+      context.trelloData.columns[columnId].content[cardArrIdx].comments.push(
+        newCommentInfo
+      );
+    } else {
+      context.trelloData.columns[columnId].content[cardArrIdx].comments = [
+        newCommentInfo,
+      ];
+    }
+
+    context.setTrelloData(storageService(context.trelloData));
+    newComment.current.textContent = emptyComment;
+    setButtonVisibility({ display: "none" });
+  };
+
+  return (
+    <CommentsBlock>
+      <h2>Комментарии</h2>
+
+      <CommentNew>
+        <PostNew
+          ref={newComment}
+          contentEditable="true"
+          onBlur={restoreNewComment}
+          onFocus={clearNewComment}
+        >
+          {emptyComment}
+        </PostNew>
+
+        <Button
+          onClick={saveNewComment}
+          style={buttonVisibility}
+          buttonStyle={buttonStyleEnum.ORANGE}
+        >
+          Сохранить
+        </Button>
+        <br />
+        <br />
+      </CommentNew>
+      {console.log("-comm-", comments)}
+      {comments
+        ? comments.map((comment: CommentsType, idx, comments) => {
+            let reverseIdx = comments.length - 1 - idx;
+            return (
+              <Comment
+                key={comments[reverseIdx].id}
+                {...{
+                  commentArrIdx: idx,
+                  cardArrIdx: cardArrIdx,
+                  columnId: columnId,
+                  ...comments[reverseIdx],
+                }}
+              />
+            );
+          })
+        : "Напишите свой комментарий."}
+    </CommentsBlock>
+  );
 };
 
 export default Comments;

@@ -12,10 +12,12 @@ type PropsType = {
   comments: Array<CommentsType>;
   id: number;
   columnId: string;
+  columnName: string;
   name: string;
   text: string;
   user: string;
-  hideComments?: boolean;
+  cardArrIdx: number;
+  newCard?: boolean;
 };
 
 const Card = (props: PropsType) => {
@@ -64,29 +66,36 @@ const Card = (props: PropsType) => {
     }
   };
 
-  function saveCard(ev: any, isDelete=false) {
+  function saveCard(ev: any, isDelete = false) {
     if (
       newName.current.textContent.trim() == emptyName ||
       !newName.current.textContent.trim()
     ) {
       return;
     }
+
     const cardInfo = {
       id: props.id,
       name: newName.current.textContent,
       user: props.user,
-      text:
+      text: String(
         newText.current.textContent.trim() == emptyText
           ? ""
-          : newText.current.textContent,
+          : newText.current.textContent
+      ),
+      comments: [],
     };
 
-    let newCardContent = context.trelloData.columns[props.columnId].content.filter(
-      (x: PropsType) => x.id != props.id
+    context.trelloData.columns[props.columnId].content.splice(
+      props.cardArrIdx,
+      !props.newCard || isDelete ? 1 : 0,
+      (() => {
+        if (!isDelete) {
+          return cardInfo;
+        }
+      })()
     );
-    if (!isDelete) {newCardContent.push(cardInfo)}
-    context.trelloData.columns[props.columnId].content=newCardContent;
-    console.log("save", props.id, context.trelloData.columns[props.columnId].content, newCardContent);
+
     context.setTrelloData(storageService(context.trelloData));
     clickClose();
   }
@@ -110,14 +119,13 @@ const Card = (props: PropsType) => {
       {context.cardStatus && (
         <Back>
           <PopupCard>
-            {console.log("3", context.cardContent)}
-            <Button
+            <ColumnName>{props.columnName}</ColumnName>
+            <CloseButton
               onClick={clickClose}
               buttonStyle={buttonStyleEnum.ORANGE}
-              style={{ float: "right" }}
             >
               X
-            </Button>
+            </CloseButton>
 
             <CardName
               ref={newName}
@@ -129,7 +137,7 @@ const Card = (props: PropsType) => {
             </CardName>
 
             <Button
-              onClick={(ev)=>saveCard(ev)}
+              onClick={(ev) => saveCard(ev)}
               buttonStyle={buttonStyleEnum.ORANGE}
               style={buttonVisibility}
             >
@@ -150,11 +158,17 @@ const Card = (props: PropsType) => {
                 {props.text ? props.text : emptyText}
               </CardText>
 
-              {props.hideComments || <Comments comments={props.comments} />}
+              {props.newCard || (
+                <Comments
+                  columnId={props.columnId}
+                  cardArrIdx={props.cardArrIdx}
+                  comments={props.comments}
+                />
+              )}
             </Content>
 
             <Button
-              onClick={(ev)=>saveCard(ev, true)}
+              onClick={(ev) => saveCard(ev, true)}
               buttonStyle={buttonStyleEnum.STRING_GREY}
               style={{ float: "right" }}
             >
@@ -169,6 +183,10 @@ const Card = (props: PropsType) => {
 
 export default Card;
 
+const CloseButton = styled(Button)`
+  float: right;
+`;
+
 const Back = styled.div`
   position: absolute;
   min-width: 100%;
@@ -182,10 +200,23 @@ const Back = styled.div`
   background-color: #0000008c;
 `;
 
+const ColumnName = styled.div`
+  background-color: #b7a186;
+  color: white;
+  padding: 14px;
+  border-radius: 9px 43px 0 0;
+  box-sizing: border-box;
+  width: 303px;
+  position: inherit;
+  left: 0;
+  top: -40px;
+  height: 40px;
+`;
+
 const PopupCard = styled.div`
   background-color: #ebecf0;
   padding: 1.5em;
-  border-radius: 3px;
+  border-radius: 0 3px 3px 3px;
   box-sizing: border-box;
   width: 768px;
   position: absolute;

@@ -12,7 +12,9 @@ function App() {
   const [cardStatus, setCardStatus] = useState(false);
   const [cardContent, setCardContent] = useState({
     comments: [],
+    cardArrIdx: 0,
     columnId: "",
+    columnName: "",
     id: 0,
     name: "",
     text: "",

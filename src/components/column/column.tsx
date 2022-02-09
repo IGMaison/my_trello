@@ -14,11 +14,13 @@ const Column = ({ id, columnContent }: PropsType) => {
   const context: any = useContext(Context);
   const newCardInfo = {
     id: Date.now(),
+    cardArrIdx: Infinity,
     columnId: id,
+    columnName: "",
     name: "",
     text: "",
     user: context.userName,
-    hideComments: true,
+    newCard: true,
   };
 
   function addCard() {
@@ -31,9 +33,21 @@ const Column = ({ id, columnContent }: PropsType) => {
       <Content>
         <ColumnTitle>{columnContent.title}</ColumnTitle>
 
-        {columnContent.content.map((card: any) => (
-          <CardSticker key={card.id} cardInfo={{ columnId: id, ...card }} />
-        ))}
+        {columnContent.content.map((card: any, idx) =>
+          card ? (
+            <CardSticker
+              key={card.id}
+              cardInfo={{
+                columnId: id,
+                columnName: columnContent.title,
+                cardArrIdx: idx,
+                ...card,
+              }}
+            />
+          ) : (
+            <></>
+          )
+        )}
 
         <Button onClick={addCard} buttonStyle={buttonStyleEnum.STRING_GREY}>
           + Добавить карточку
