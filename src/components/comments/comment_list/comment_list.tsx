@@ -18,7 +18,7 @@ type PropsType = {
 const CommentList = (props: PropsType) => {
   const [postEditAbility, setPostEditAbility] = useState<boolean>(false);
   const [commentIsDeleted, setCommentIsDeleted] = useState<boolean>(true);
-  const context: any = useContext(Context);
+  const context: ContxtType = useContext(Context);
   let commentRef = React.createRef<HTMLDivElement>();
 
   useEffect(() => {
@@ -36,22 +36,22 @@ const CommentList = (props: PropsType) => {
       text: commentRef.current.textContent,
       user: props.user,
     };
-    context.setTrelloData(():DataType => {
+    context.setTrelloData((():DataType => {
       context.trelloData.columns[props.columnId].content[
         props.cardArrIdx
       ].comments[props.commentArrIdx] = newComment;
       return storageService.setTrelloStorage(context.trelloData);
-    });
+    })());
     setPostEditAbility(false);
   }
 
   function deletePost(): void {
-    context.setTrelloData(() => {
+    context.setTrelloData((():DataType => {
       context.trelloData.columns[props.columnId].content[
         props.cardArrIdx
       ].comments.splice(props.commentArrIdx, 1);
       return storageService.setTrelloStorage(context.trelloData);
-    });
+    })());
     setCommentIsDeleted(false);
   }
   return (

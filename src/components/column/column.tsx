@@ -4,7 +4,8 @@ import CardSticker from "../card_sticker";
 import {Button} from "../UI";
 import {buttonStyleEnum} from "../UI";
 import {Context} from "../../context";
-import {storageService} from "../services";
+import {DataType, storageService} from "../services";
+import {ContxtType} from "../../App";
 
 type PropsType = {
     id: string;
@@ -12,11 +13,12 @@ type PropsType = {
 };
 
 const Column = ({id, columnContent}: PropsType) => {
-    const context: any = useContext(Context);
+    const context: ContxtType = useContext(Context);
     const [inputValue, setInputValue] = useState(columnContent.title);
     const [visibility, setVisibility] = useState(false);
 
     const newCardInfo = {
+        comments:[],
         id: Date.now(),
         cardArrIdx: Infinity,
         columnId: id,
@@ -51,11 +53,11 @@ const Column = ({id, columnContent}: PropsType) => {
             return;
         }
         setVisibility(false);
-        context.setTrelloData(() => {
+        context.setTrelloData((():DataType=>{
             context.trelloData.columns[id].title = inputValue;
             return storageService.setTrelloStorage(context.trelloData)
-        })
-    };
+        })())
+    }
 
 
     function addCard() {

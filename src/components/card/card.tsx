@@ -1,4 +1,4 @@
-import React, {Fragment, useContext, useEffect, useState} from "react";
+import React, {Fragment, SyntheticEvent, useContext, useEffect, useState} from "react";
 import styled from "styled-components";
 import {Button} from "../UI";
 import {buttonStyleEnum} from "../UI";
@@ -61,7 +61,7 @@ const Card = (props: CardContent) => {
         }
     };
 
-    function saveCard(ev: any, isDelete = false) {
+    function saveCard(ev: SyntheticEvent, isDelete = false) {
 
         if (!(cardNameRef.current && cardNameRef.current.textContent) ||
             (cardNameRef.current.textContent.trim() == emptyName ||
