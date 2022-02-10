@@ -1,4 +1,4 @@
-import React, { Fragment, SyntheticEvent, useContext, useState } from "react";
+import React, {Fragment, useContext, useEffect, useState} from "react";
 import styled from "styled-components";
 import { Context } from "../../../context";
 import { storageService } from "../../services";
@@ -20,6 +20,12 @@ const Comment = (props: PropsType) => {
   const context: any = useContext(Context);
   let commentRef = React.createRef<any>();
 
+  useEffect(() => {
+    if (postEditAbility) {
+      commentRef.current.focus();
+    }
+  }, [postEditAbility]);
+
   function saveComment(): void {
     if (!commentRef.current.textContent.trim()) {
       return;
@@ -29,12 +35,6 @@ const Comment = (props: PropsType) => {
       text: commentRef.current.textContent,
       user: props.user,
     };
-    console.log(
-      "edit comm",
-      newComment,
-      context.trelloData.columns[props.columnId].content[props.cardArrIdx]
-        .comments[props.commentArrIdx]
-    );
     context.setTrelloData(() => {
       context.trelloData.columns[props.columnId].content[
         props.cardArrIdx
@@ -57,17 +57,19 @@ const Comment = (props: PropsType) => {
     <Fragment>
       {commentIsDeleted && (
         <CommentBody>
+
           Автор коммента: {props.user}
+
+
+
           <Post ref={commentRef} contentEditable={postEditAbility}>
-            <Button
-              onClick={deletePost}
-              buttonStyle={buttonStyleEnum.ORANGE}
-              style={{ float: "right" }}
-            >
-              X
-            </Button>
             {props.text}
-          </Post>
+          </Post><DeleteButton
+            onClick={deletePost}
+            buttonStyle={buttonStyleEnum.ORANGE}
+        >X
+        </DeleteButton>
+
           {!postEditAbility ? (
             <Button
               onClick={() => {
@@ -77,6 +79,7 @@ const Comment = (props: PropsType) => {
             >
               Изменить
             </Button>
+
           ) : (
             <></>
           )}
@@ -115,6 +118,15 @@ const Post = styled.div`
   background-color: #fff;
   border-radius: 5px;
   border: solid 1px #ddd;
-  width: 100%;
+  width: 693px;
   text-align: left;
+  display: inline-block;
 `;
+
+const DeleteButton = styled(Button)`
+  float: right;
+  position:relative;
+  top: 1px;
+  right: 0px;
+  height: 35px;
+`

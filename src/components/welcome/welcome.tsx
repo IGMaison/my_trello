@@ -6,7 +6,6 @@ type Props = {
     changeUserName: React.SetStateAction<any>
     setData: React.Dispatch<SetStateAction<dataType>>;
 };
-
 const Welcome = ({changeUserName, setData}: Props) => {
     const [name, changeName] = useState("");
 

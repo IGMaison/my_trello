@@ -22,8 +22,8 @@ const CardSticker = ({ cardInfo }: { cardInfo: any }) => {
       <CardName>{cardInfo.name}</CardName>
 
       <StickerProp>
-        {isCardInfo}
-        {commentsNumber}
+          <span title={"Наличие описания"}>{isCardInfo}</span>
+          <span title={"Количество комментариев"}>{commentsNumber}</span>
       </StickerProp>
     </StickerBase>
   );

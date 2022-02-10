@@ -26,7 +26,6 @@ const Comments = ({
     setButtonVisibility({ display: "block" });
     if (newComment.current.textContent.trim() == emptyComment) {
       newComment.current.textContent = "";
-      console.log(newComment.current);
     }
   };
 
@@ -38,8 +37,6 @@ const Comments = ({
     newComment.current.style.color = "grey";
   };
   const saveNewComment = (ev: React.MouseEvent<Element>) => {
-    console.log("inner", newComment.current.textContent);
-
     if (
       newComment.current.textContent.trim() == emptyComment ||
       !newComment.current.textContent.trim()
@@ -92,7 +89,6 @@ const Comments = ({
         <br />
         <br />
       </CommentNew>
-      {console.log("-comm-", comments)}
       {comments
         ? comments.map((comment: CommentsType, idx, comments) => {
             let reverseIdx = comments.length - 1 - idx;
@@ -100,7 +96,7 @@ const Comments = ({
               <Comment
                 key={comments[reverseIdx].id}
                 {...{
-                  commentArrIdx: idx,
+                  commentArrIdx: reverseIdx,
                   cardArrIdx: cardArrIdx,
                   columnId: columnId,
                   ...comments[reverseIdx],

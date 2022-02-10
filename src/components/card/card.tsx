@@ -22,8 +22,6 @@ type PropsType = {
 
 const Card = (props: PropsType) => {
   const context: any = useContext(Context);
-  console.count("Card");
-  console.log("ci", props);
   const emptyText =
     "Подробного описания нет, но прямо здесь его можно написать.";
   const emptyName = "Новый заголовок";
@@ -100,26 +98,27 @@ const Card = (props: PropsType) => {
     clickClose();
   }
 
-  useEffect(() => {
-    function escKeyDown(ev: KeyboardEvent) {
-      if (ev.key === "Escape") {
-        setButtonVisibility({ display: "none" });
-        context.setCardStatus(false);
-      }
+  function escKeyDown(ev: KeyboardEvent) {
+    if (ev.key === "Escape") {
+      setButtonVisibility({ display: "none" });
+      context.setCardStatus(false);
     }
+  }
 
+  useEffect(() => {
     document.addEventListener("keydown", escKeyDown);
     return () => {
       document.removeEventListener("keydown", escKeyDown);
     };
-  }, []);
+  }, [context.cardStatus]);
 
   return (
     <Fragment>
       {context.cardStatus && (
         <Back>
           <PopupCard>
-            <ColumnName>{props.columnName}</ColumnName>
+
+            <ColumnTop>{props.columnName}</ColumnTop>
             <CloseButton
               onClick={clickClose}
               buttonStyle={buttonStyleEnum.ORANGE}
@@ -185,6 +184,7 @@ export default Card;
 
 const CloseButton = styled(Button)`
   float: right;
+  background-color: #b7a186;
 `;
 
 const Back = styled.div`
@@ -200,10 +200,10 @@ const Back = styled.div`
   background-color: #0000008c;
 `;
 
-const ColumnName = styled.div`
+const ColumnTop = styled.div`
   background-color: #b7a186;
   color: white;
-  padding: 14px;
+  padding: 10px;
   border-radius: 9px 43px 0 0;
   box-sizing: border-box;
   width: 303px;

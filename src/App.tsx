@@ -33,7 +33,6 @@ function App() {
         cardContent,
       }}
     >
-      {console.log(userName, trelloData)}
       <Main>
         {Object.keys(trelloData.columns).length > 0 ? (
           Object.keys(trelloData.columns).map((key) => (
