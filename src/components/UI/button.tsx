@@ -7,15 +7,13 @@ type PropsType = {
     style?: object;
     onClick: MouseEventHandler;
 }
-const Button = (props: PropsType) => {
+export const Button = (props: PropsType) => {
     return (
         <ButtonStyled {...props}/>)
 };
 
-export default Button;
-export {buttonStyleEnum}
 
-const ButtonStyled = styled.button<PropsType>`
+export const ButtonStyled = styled.button<PropsType>`
   font-size: 13px;
   font-weight: 400;  
   cursor: pointer;
@@ -31,7 +29,7 @@ const ButtonStyled = styled.button<PropsType>`
 }};
 `;
 
-const enum buttonStyleEnum {
+export const enum buttonStyleEnum {
     STRING_GREY = 1,
     ORANGE,
     GREY

@@ -1,27 +1,52 @@
-export interface dataType {
-    columns: { [index: string]: { title: string; content: Array<object> } };
+export type CommentsType = { id: number; text: string; user: string };
+
+export type CardContent = {
+    comments: CommentsType[],
+    cardArrIdx: number,
+    columnId: string,
+    columnName?: string,
+    id: number,
+    name: string,
+    text: string,
+    user: string,
+    newCard?: boolean;
 }
 
-export let emptyData: dataType = {
-    columns: {
-        1: {title: "TODO", content: []},
-        2: {title: "IN PROGRESS", content: []},
-        3: {title: "TESTING", content: []},
-        4: {title: "DONE", content: []},
-    },
-};
+export type DataType = {
+    columns: { [index: string]: { title: string; content: Array<CardContent> } };
+}
 
-export function storageService(data?: dataType): dataType {
-    let localStorage = window.localStorage;
-    const baseName = 't';
-    if (data) {
-        localStorage[baseName] = JSON.stringify(data);
-        return data;
-    } else {
-        if (baseName in localStorage) {
-            return JSON.parse(localStorage[baseName]);
-        }
+
+
+class StorageService {
+
+    public emptyData: DataType = {
+        columns: {
+            1: {title: "TODO", content: []},
+            2: {title: "IN PROGRESS", content: []},
+            3: {title: "TESTING", content: []},
+            4: {title: "DONE", content: []},
+        },
+    };
+    private baseName = 't';
+    private trelloStorage = localStorage;
+
+    constructor() {
     }
-    localStorage[baseName] = JSON.stringify(emptyData);
-    return emptyData;
+
+    get getTrelloStorage (): DataType {
+        if (this.baseName in this.trelloStorage) {
+            return JSON.parse(this.trelloStorage[this.baseName]);
+        }
+        this.trelloStorage[this.baseName] = JSON.stringify(this.emptyData);
+        return this.emptyData;
+    }
+
+    setTrelloStorage (base: DataType) : DataType{
+
+        this.trelloStorage[this.baseName] = JSON.stringify(base)
+        return base;
+    }
 }
+
+export const storageService = new StorageService();

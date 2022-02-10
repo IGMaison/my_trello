@@ -1,9 +1,10 @@
 import React, { SyntheticEvent, useContext, useRef, useState } from "react";
 import styled from "styled-components";
-import Comment from "./comment";
+import CommentList from "./comment_list";
 import { Button, buttonStyleEnum } from "../UI";
 import { Context } from "../../context";
 import { storageService } from "../services";
+import {ContxtType} from "../../App";
 
 type CommentsType = { id: number; text: string; user: string };
 
@@ -16,37 +17,41 @@ const Comments = ({
   cardArrIdx: number;
   comments: Array<CommentsType>;
 }) => {
-  const context: any = useContext(Context);
+  const context: ContxtType = useContext(Context);
   const emptyComment = "Коммент писать здесь";
-  let newComment = React.createRef<any>();
-  const [buttonVisibility, setButtonVisibility] = useState({ display: "none" });
+  let newCommentRef = React.createRef<HTMLDivElement>();
+  const [buttonVisibility, setButtonVisibility] = useState(false);
+  const [newCommentColor, saveNewCommentColor] = useState("grey");
 
   const clearNewComment = (ev: SyntheticEvent) => {
-    newComment.current.style.color = "black";
-    setButtonVisibility({ display: "block" });
-    if (newComment.current.textContent.trim() == emptyComment) {
-      newComment.current.textContent = "";
-    }
+    if (newCommentRef.current) {
+      saveNewCommentColor("black");
+    setButtonVisibility(true);
+    if (!newCommentRef.current.textContent || newCommentRef.current.textContent.trim() == emptyComment) {
+      newCommentRef.current.textContent = "";
+    }}
   };
 
   const restoreNewComment = (ev: SyntheticEvent) => {
-    if (!newComment.current.textContent.trim()) {
-      newComment.current.textContent = emptyComment;
-      setButtonVisibility({ display: "none" });
+    if (newCommentRef.current) {
+    if (!(newCommentRef.current.textContent && newCommentRef.current.textContent.trim())) {
+      newCommentRef.current.textContent = emptyComment;
+      setButtonVisibility(false);
     }
-    newComment.current.style.color = "grey";
+      saveNewCommentColor("grey");
+    }
   };
   const saveNewComment = (ev: React.MouseEvent<Element>) => {
-    if (
-      newComment.current.textContent.trim() == emptyComment ||
-      !newComment.current.textContent.trim()
+    if (!(newCommentRef.current && newCommentRef.current.textContent) ||
+        (newCommentRef.current.textContent.trim() == emptyComment ||
+      !newCommentRef.current.textContent.trim())
     ) {
       return;
     }
 
     const newCommentInfo = {
       id: Date.now(),
-      text: newComment.current.textContent,
+      text: newCommentRef.current.textContent,
       user: context.userName,
     };
 
@@ -60,40 +65,38 @@ const Comments = ({
       ];
     }
 
-    context.setTrelloData(storageService(context.trelloData));
-    newComment.current.textContent = emptyComment;
-    setButtonVisibility({ display: "none" });
+    context.setTrelloData(storageService.setTrelloStorage(context.trelloData));
+    newCommentRef.current.textContent = emptyComment;
+    setButtonVisibility(false);
   };
 
   return (
     <CommentsBlock>
       <h2>Комментарии</h2>
 
-      <CommentNew>
+      <CommentNew color={newCommentColor}>
         <PostNew
-          ref={newComment}
+          ref={newCommentRef}
           contentEditable="true"
           onBlur={restoreNewComment}
           onFocus={clearNewComment}
+          color={newCommentColor}
         >
           {emptyComment}
         </PostNew>
 
-        <Button
+        {buttonVisibility && <Button
           onClick={saveNewComment}
-          style={buttonVisibility}
           buttonStyle={buttonStyleEnum.ORANGE}
         >
           Сохранить
-        </Button>
-        <br />
-        <br />
+        </Button>}
       </CommentNew>
       {comments
         ? comments.map((comment: CommentsType, idx, comments) => {
             let reverseIdx = comments.length - 1 - idx;
             return (
-              <Comment
+              <CommentList
                 key={comments[reverseIdx].id}
                 {...{
                   commentArrIdx: reverseIdx,
@@ -123,7 +126,7 @@ const CommentsBlock = styled.div`
 
 const CommentNew = styled.div`
   box-sizing: border-box;
-  margin: 0;
+ margin-bottom: 2em;
   padding: 0;
   position: relative;
   width: 100%;
@@ -132,8 +135,8 @@ const CommentNew = styled.div`
 const PostNew = styled.div`
   border: 0 white;
   box-sizing: border-box;
-  color: grey;
-  margin: 0;
+  color: ${({color}:{color:string}):string=>color};
+   margin: 0;
   font-size: 14px;
   overflow: hidden;
   padding: 8px;

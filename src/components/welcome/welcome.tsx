@@ -1,35 +1,35 @@
 import React, {SetStateAction, SyntheticEvent, useState} from "react";
 import styled from "styled-components";
-import {dataType, storageService} from "../services";
+import {DataType, storageService} from "../services";
 
 type Props = {
-    changeUserName: React.SetStateAction<any>
-    setData: React.Dispatch<SetStateAction<dataType>>;
+    changeUserName: React.Dispatch<SetStateAction<string>>
+    setData: React.Dispatch<SetStateAction<DataType>>;
 };
 const Welcome = ({changeUserName, setData}: Props) => {
     const [name, changeName] = useState("");
 
-    const onChangeFn = (ev: React.ChangeEvent<HTMLInputElement>): void => {
+    const onChange = (ev: React.ChangeEvent<HTMLInputElement>): void => {
         changeName(ev.target.value);
     };
 
-    const [display, changeDisplay] = useState({});
+    const [visibility, changeVisibility] = useState<boolean>(true);
 
-    const submitFn = (ev: SyntheticEvent) => {
+    const onSubmit = (ev: SyntheticEvent) => {
         if (name.trim()) {
             changeUserName(name.replace(/\s+/g, ' ').trim());
-            setData(storageService());
-            changeDisplay({display: "none"});
+            setData(storageService.getTrelloStorage);
+            changeVisibility(false);
         }
         ev.preventDefault();
     };
 
     return (
-        <Back style={display}>
+        (visibility) ? <WelcomeBackground>
             <Popup>
-                <form onSubmit={submitFn}>
+                <form onSubmit={onSubmit}>
                     <Input
-                        onChange={onChangeFn}
+                        onChange={onChange}
                         value={name}
                         name="userName"
                         placeholder="Введите ваше имя здесь."
@@ -37,13 +37,15 @@ const Welcome = ({changeUserName, setData}: Props) => {
                     <Submit type="submit" value={`Далее >`}/>
                 </form>
             </Popup>
-        </Back>
+        </WelcomeBackground>
+        :
+        <></>
     );
 };
 
 export default Welcome;
 
-const Back = styled.div`
+const WelcomeBackground = styled.div`
   visibility: visible;
   position: absolute;
   min-width: 100%;

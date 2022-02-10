@@ -1,9 +1,10 @@
 import React, {Fragment, useContext, useEffect, useState} from "react";
 import styled from "styled-components";
 import { Context } from "../../../context";
-import { storageService } from "../../services";
+import {DataType, storageService} from "../../services";
 import { Button } from "../../UI";
 import { buttonStyleEnum } from "../../UI";
+import {ContxtType} from "../../../App";
 
 type PropsType = {
   commentArrIdx: number;
@@ -14,20 +15,20 @@ type PropsType = {
   user: string;
 };
 
-const Comment = (props: PropsType) => {
-  const [postEditAbility, setPostEditAbility] = useState(false);
-  const [commentIsDeleted, setCommentIsDeleted] = useState(true);
+const CommentList = (props: PropsType) => {
+  const [postEditAbility, setPostEditAbility] = useState<boolean>(false);
+  const [commentIsDeleted, setCommentIsDeleted] = useState<boolean>(true);
   const context: any = useContext(Context);
-  let commentRef = React.createRef<any>();
+  let commentRef = React.createRef<HTMLDivElement>();
 
   useEffect(() => {
-    if (postEditAbility) {
+    if (postEditAbility && commentRef.current) {
       commentRef.current.focus();
     }
   }, [postEditAbility]);
 
   function saveComment(): void {
-    if (!commentRef.current.textContent.trim()) {
+    if (!(commentRef.current && commentRef.current.textContent) || !commentRef.current.textContent.trim()) {
       return;
     }
     const newComment = {
@@ -35,11 +36,11 @@ const Comment = (props: PropsType) => {
       text: commentRef.current.textContent,
       user: props.user,
     };
-    context.setTrelloData(() => {
+    context.setTrelloData(():DataType => {
       context.trelloData.columns[props.columnId].content[
         props.cardArrIdx
       ].comments[props.commentArrIdx] = newComment;
-      return storageService(context.trelloData);
+      return storageService.setTrelloStorage(context.trelloData);
     });
     setPostEditAbility(false);
   }
@@ -49,7 +50,7 @@ const Comment = (props: PropsType) => {
       context.trelloData.columns[props.columnId].content[
         props.cardArrIdx
       ].comments.splice(props.commentArrIdx, 1);
-      return storageService(context.trelloData);
+      return storageService.setTrelloStorage(context.trelloData);
     });
     setCommentIsDeleted(false);
   }
@@ -96,7 +97,7 @@ const Comment = (props: PropsType) => {
   );
 };
 
-export default Comment;
+export default CommentList;
 
 const CommentBody = styled.div`
   box-sizing: border-box;
@@ -107,7 +108,6 @@ const CommentBody = styled.div`
 `;
 
 const Post = styled.div`
-  border: 0 white;
   box-sizing: border-box;
   color: black;
   margin: 0;

@@ -1,4 +1,4 @@
-import React, {Fragment, useContext, useEffect, useState} from "react";
+import React, {Fragment, SyntheticEvent, useContext, useEffect, useState} from "react";
 import styled from "styled-components";
 import CardSticker from "../card_sticker";
 import {Button} from "../UI";
@@ -20,7 +20,7 @@ const Column = ({id, columnContent}: PropsType) => {
         id: Date.now(),
         cardArrIdx: Infinity,
         columnId: id,
-        columnName: "",
+        columnName: columnContent.title,
         name: "",
         text: "",
         user: context.userName,
@@ -31,7 +31,7 @@ const Column = ({id, columnContent}: PropsType) => {
         setInputValue(ev.target.value);
     }
 
-    function exitInput(ev: any) {
+    function exitInput(ev: KeyboardEvent) {
         if (ev.key === "Escape" || ev.key === undefined) {
             setVisibility(false)
         }
@@ -44,7 +44,7 @@ const Column = ({id, columnContent}: PropsType) => {
         };
     }, []);
 
-    function saveColumnTitle(ev: any) {
+    function saveColumnTitle(ev: SyntheticEvent) {
         ev.preventDefault();
         if (!inputValue.trim()
         ) {
@@ -53,7 +53,7 @@ const Column = ({id, columnContent}: PropsType) => {
         setVisibility(false);
         context.setTrelloData(() => {
             context.trelloData.columns[id].title = inputValue;
-            return storageService(context.trelloData)
+            return storageService.setTrelloStorage(context.trelloData)
         })
     };
 
@@ -134,7 +134,6 @@ const ColumnWrapper = styled.div`
 const ColumnTitle = styled.div`
   color: black;
   margin: 0;
-  padding: 0.2em 1em;
   font-size: 15px;
   font-weight: 600;
   padding: 10 px 8 px;
@@ -180,6 +179,7 @@ const Input = styled.input`
   line-height: 1em;
   width: 95%;
   text-transform: uppercase;
+  z-index: 9;
 `;
 
 const SaveButton = styled.input`
@@ -187,7 +187,7 @@ const SaveButton = styled.input`
   top: 43px;
   left: 17px;
   z-index: 10;
- font-size: 14px;
+  font-size: 14px;
   font-weight: 400;
   text-align: left;
   cursor: pointer;

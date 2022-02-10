@@ -1,4 +1,23 @@
 import React from 'react'
+import {DataType, storageService} from "./components/services";
+import {CardContent} from "./components/services/storage_service";
 
-export const Context = React.createContext({})
+const defaultContext = {
+    userName: "",
+    trelloData: storageService.emptyData,
+    setTrelloData: (x:DataType)=>{},
+    setCardStatus: (x:boolean)=>{},
+    setCardContent: (x: CardContent)=>{},
+    cardStatus: false,
+    cardContent: {
+        comments: [{ id: 0, text: "", user: "" }],
+        cardArrIdx: 0,
+        columnId: "",
+        id: 0,
+        name: "",
+        text: "",
+        user: "",
+    }
+}
+export const Context = React.createContext(defaultContext)
 

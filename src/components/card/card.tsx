@@ -1,183 +1,177 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, {Fragment, useContext, useEffect, useState} from "react";
 import styled from "styled-components";
-import { Button } from "../UI";
-import { buttonStyleEnum } from "../UI";
+import {Button} from "../UI";
+import {buttonStyleEnum} from "../UI";
 import Comments from "../comments";
-import { Context } from "../../context";
-import { storageService } from "../services";
+import {Context} from "../../context";
+import {storageService} from "../services";
+import {CardContent} from "../services/storage_service";
+import {ContxtType} from "../../App";
 
-type CommentsType = { id: number; text: string; user: string };
 
-type PropsType = {
-  comments: Array<CommentsType>;
-  id: number;
-  columnId: string;
-  columnName: string;
-  name: string;
-  text: string;
-  user: string;
-  cardArrIdx: number;
-  newCard?: boolean;
-};
+const Card = (props: CardContent) => {
+    const context: ContxtType = useContext(Context);
+    const emptyText =
+        "Подробного описания нет, но прямо здесь его можно написать.";
+    const emptyName = "Новый заголовок";
+    let cardTextRef = React.createRef<HTMLDivElement>();
+    let cardNameRef = React.createRef<HTMLDivElement>();
+    const [buttonVisibility, setButtonVisibility] = useState<boolean>(false);
 
-const Card = (props: PropsType) => {
-  const context: any = useContext(Context);
-  const emptyText =
-    "Подробного описания нет, но прямо здесь его можно написать.";
-  const emptyName = "Новый заголовок";
-  let newText = React.createRef<any>();
-  let newName = React.createRef<any>();
-  const [buttonVisibility, setButtonVisibility] = useState({ display: "none" });
-
-  const clearRef = () => {
-    newText.current.style.backgroundColor = "white";
-    setButtonVisibility({ display: "block" });
-    if (newText.current.textContent.trim() == emptyText) {
-      newText.current.textContent = "";
-    }
-  };
-
-  const restoreRef = () => {
-    if (!newText.current.textContent.trim()) {
-      newText.current.textContent = emptyText;
-    }
-    newText.current.style.backgroundColor = "#ebecf0";
-  };
-
-  const clickClose = () => {
-    setButtonVisibility({ display: "none" });
-    context.setCardStatus(false);
-  };
-
-  const restoreRefName = () => {
-    if (!newName.current.textContent.trim()) {
-      newName.current.textContent = emptyName;
-      setButtonVisibility({ display: "none" });
-    }
-    newName.current.style.backgroundColor = "#ebecf0";
-  };
-  const clearRefName = () => {
-    newName.current.style.backgroundColor = "white";
-    setButtonVisibility({ display: "block" });
-    if (newName.current.textContent.trim() == emptyName) {
-      newName.current.textContent = "";
-    }
-  };
-
-  function saveCard(ev: any, isDelete = false) {
-    if (
-      newName.current.textContent.trim() == emptyName ||
-      !newName.current.textContent.trim()
-    ) {
-      return;
-    }
-
-    const cardInfo = {
-      id: props.id,
-      name: newName.current.textContent,
-      user: props.user,
-      text: String(
-        newText.current.textContent.trim() == emptyText
-          ? ""
-          : newText.current.textContent
-      ),
-      comments: [],
-    };
-
-    context.trelloData.columns[props.columnId].content.splice(
-      props.cardArrIdx,
-      !props.newCard || isDelete ? 1 : 0,
-      (() => {
-        if (!isDelete) {
-          return cardInfo;
+    const clearCardText = () => {
+        if (cardTextRef.current) {
+            cardTextRef.current.style.backgroundColor = "white";
+            setButtonVisibility(true);
+            if (!(cardTextRef.current.textContent && cardTextRef.current.textContent.trim() != emptyText)) {
+                cardTextRef.current.textContent = "";
+            }
         }
-      })()
-    );
-
-    context.setTrelloData(storageService(context.trelloData));
-    clickClose();
-  }
-
-  function escKeyDown(ev: KeyboardEvent) {
-    if (ev.key === "Escape") {
-      setButtonVisibility({ display: "none" });
-      context.setCardStatus(false);
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener("keydown", escKeyDown);
-    return () => {
-      document.removeEventListener("keydown", escKeyDown);
     };
-  }, [context.cardStatus]);
 
-  return (
-    <Fragment>
-      {context.cardStatus && (
-        <Back>
-          <PopupCard>
+    const restoreDefaultCardText = () => {
+        if (cardTextRef.current) {
+            if (!(cardTextRef.current.textContent && cardTextRef.current.textContent.trim())) {
+                cardTextRef.current.textContent = emptyText;
+            }
+            cardTextRef.current.style.backgroundColor = "#ebecf0";
+        }
+    };
 
-            <ColumnTop>{props.columnName}</ColumnTop>
-            <CloseButton
-              onClick={clickClose}
-              buttonStyle={buttonStyleEnum.ORANGE}
-            >
-              X
-            </CloseButton>
+    const CloseCard = () => {
+        setButtonVisibility(false);
+        context.setCardStatus(false);
+    };
 
-            <CardName
-              ref={newName}
-              onBlur={restoreRefName}
-              onFocus={clearRefName}
-              contentEditable={true}
-            >
-              {props.name ? props.name : emptyName}
-            </CardName>
+    const restoreDefaultCardName = () => {
+        if (cardNameRef.current) {
+            if (!(cardNameRef.current.textContent && cardNameRef.current.textContent.trim())) {
+                cardNameRef.current.textContent = emptyName;
+                setButtonVisibility(false);
+            }
+            cardNameRef.current.style.backgroundColor = "#ebecf0";
+        }
+    };
+    const clearCardName = () => {
+        if (cardNameRef.current) {
+            cardNameRef.current.style.backgroundColor = "white";
+            setButtonVisibility(true);
+            if (!(cardNameRef.current.textContent && cardNameRef.current.textContent.trim() != emptyName)) {
+                cardNameRef.current.textContent = "";
+            }
+        }
+    };
 
-            <Button
-              onClick={(ev) => saveCard(ev)}
-              buttonStyle={buttonStyleEnum.ORANGE}
-              style={buttonVisibility}
-            >
-              Сохранить карточку
-            </Button>
+    function saveCard(ev: any, isDelete = false) {
 
-            <Author>Создал: {props.user}</Author>
+        if (!(cardNameRef.current && cardNameRef.current.textContent) ||
+            (cardNameRef.current.textContent.trim() == emptyName ||
+                !cardNameRef.current.textContent.trim())
+        ) {
+            return;
+        }
+        const cardInfo = {
+            id: props.id,
+            name: cardNameRef.current && cardNameRef.current.textContent,
+            user: props.user,
+            text: String(cardTextRef.current && cardTextRef.current.textContent &&
+                cardTextRef.current.textContent.trim() == emptyText
+                ? ""
+                : cardTextRef.current && cardTextRef.current.textContent
+            ),
+            comments: [],
+        };
+        context.trelloData.columns[props.columnId].content.splice(
+            props.cardArrIdx,
+            !props.newCard || isDelete ? 1 : 0,
+            (() => {
+                if (!isDelete) {
+                    return cardInfo;
+                }
+            })() as unknown as CardContent
+        );
+        context.setTrelloData(storageService.setTrelloStorage(context.trelloData));
+        CloseCard();
+    }
 
-            <Content>
-              <ContHeader>Описание</ContHeader>
+    function escKeyDown(ev: KeyboardEvent) {
+        if (ev.key === "Escape") {
+            setButtonVisibility(false);
+            context.setCardStatus(false);
+        }
+    }
 
-              <CardText
-                ref={newText}
-                onBlur={restoreRef}
-                onFocus={clearRef}
-                contentEditable="true"
-              >
-                {props.text ? props.text : emptyText}
-              </CardText>
+    useEffect(() => {
+        document.addEventListener("keydown", escKeyDown);
+        return () => {
+            document.removeEventListener("keydown", escKeyDown);
+        };
+    }, [context.cardStatus]);
 
-              {props.newCard || (
-                <Comments
-                  columnId={props.columnId}
-                  cardArrIdx={props.cardArrIdx}
-                  comments={props.comments}
-                />
-              )}
-            </Content>
+    return (
+        <Fragment>
+            {context.cardStatus && (
+                <Back>
+                    <PopupCard>
 
-            <Button
-              onClick={(ev) => saveCard(ev, true)}
-              buttonStyle={buttonStyleEnum.STRING_GREY}
-              style={{ float: "right" }}
-            >
-              Удалить карточку
-            </Button>
-          </PopupCard>
-        </Back>
-      )}
-    </Fragment>
-  );
+                        <ColumnTop>{props.columnName}</ColumnTop>
+                        <CloseButton
+                            onClick={CloseCard}
+                            buttonStyle={buttonStyleEnum.ORANGE}
+                        >
+                            X
+                        </CloseButton>
+
+                        <CardName
+                            ref={cardNameRef}
+                            onBlur={restoreDefaultCardName}
+                            onFocus={clearCardName}
+                            contentEditable={true}
+                        >
+                            {props.name ? props.name : emptyName}
+                        </CardName>
+
+                        {buttonVisibility && <Button
+                            onClick={(ev) => saveCard(ev)}
+                            buttonStyle={buttonStyleEnum.ORANGE}
+                        >
+                            Сохранить карточку
+                        </Button>}
+
+                        <Author>Создал: {props.user}</Author>
+
+                        <Content>
+
+                            <ContHeader>Описание</ContHeader>
+
+                            <CardText
+                                ref={cardTextRef}
+                                onBlur={restoreDefaultCardText}
+                                onFocus={clearCardText}
+                                contentEditable="true"
+                            >
+                                {props.text ? props.text : emptyText}
+                            </CardText>
+
+                            {props.newCard || (
+                                <Comments
+                                    columnId={props.columnId}
+                                    cardArrIdx={props.cardArrIdx}
+                                    comments={props.comments}
+                                />
+                            )}
+                        </Content>
+                        {!props.newCard && <Button
+                            onClick={(ev) => saveCard(ev, true)}
+                            buttonStyle={buttonStyleEnum.STRING_GREY}
+                            style={{float: "right"}}
+                        >
+                            Удалить карточку
+                        </Button>}
+                    </PopupCard>
+                </Back>
+            )}
+        </Fragment>
+    );
 };
 
 export default Card;

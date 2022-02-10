@@ -1,25 +1,35 @@
 import React, { useState } from "react";
-import styled from "styled-components";
-import Column from "./components/column";
-import Card from "./components/card";
 import Welcome from "./components/welcome";
-import { emptyData } from "./components/services";
+import {DataType, storageService} from "./components/services";
 import { Context } from "./context";
+import Dashboard from "./components/dashboard";
+import {CardContent} from "./components/services/storage_service";
+
+export type ContxtType = {
+    userName: string,
+    trelloData: DataType,
+    setTrelloData: (x:DataType)=>void,
+    setCardStatus: (x:boolean)=>void,
+    setCardContent: (x:CardContent)=>void,
+    cardStatus: boolean,
+    cardContent: CardContent,
+}
 
 function App() {
-  const [userName, changeUserName] = useState("");
-  const [trelloData, setTrelloData] = useState(emptyData);
-  const [cardStatus, setCardStatus] = useState(false);
-  const [cardContent, setCardContent] = useState({
-    comments: [],
+  const [userName, changeUserName] = useState<string>("");
+  const [trelloData, setTrelloData] = useState<DataType>(storageService.emptyData);
+  const [cardStatus, setCardStatus] = useState<boolean>(false);
+  const [cardContent, setCardContent] = useState<CardContent>({
+    comments: [{ id: 0, text: "null", user: "" }],
     cardArrIdx: 0,
     columnId: "",
-    columnName: "",
     id: 0,
     name: "",
     text: "",
     user: "",
   });
+
+
 
   return (
     <Context.Provider
@@ -33,37 +43,10 @@ function App() {
         cardContent,
       }}
     >
-      <Main>
-        {Object.keys(trelloData.columns).length > 0 ? (
-          Object.keys(trelloData.columns).map((key) => (
-            <Column
-              key={key}
-              id={key}
-              columnContent={trelloData.columns[key]}
-            />
-          ))
-        ) : (
-          <>NOTHING TO SHOW</>
-        )}
-        <Card {...cardContent} />
-        <Welcome changeUserName={changeUserName} setData={setTrelloData} />
-      </Main>
+      <Dashboard cardContent={cardContent} trelloData={trelloData}/>
+      <Welcome changeUserName={changeUserName} setData={setTrelloData} />
     </Context.Provider>
   );
 }
 
 export default App;
-
-const Main = styled.div`
-  backgroundcolor: #282c34;
-  minheight: 100vh;
-  display: flex;
-  flexdirection: row;
-  alignitems: flex-start;
-  justifycontent: flex-start;
-  color: #172b4d;
-  fontsize: 14px;
-  fontweight: 400;
-  lineheight: 20px;
-  width: fit-content;
-`;

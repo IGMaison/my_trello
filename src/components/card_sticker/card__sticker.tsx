@@ -1,9 +1,11 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import { Context } from "../../context";
+import {ContxtType} from "../../App";
+import {CardContent} from "../services/storage_service";
 
-const CardSticker = ({ cardInfo }: { cardInfo: any }) => {
-  const context: any = useContext(Context);
+const CardSticker = ({ cardInfo }: { cardInfo: CardContent }) => {
+  const context: ContxtType = useContext(Context);
 
   function CardStickerClick(): void {
     context.setCardContent(cardInfo);
