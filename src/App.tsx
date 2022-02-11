@@ -20,9 +20,7 @@ function App() {
   const [trelloData, setTrelloData] = useState<DataType>(storageService.emptyData);
   const [cardStatus, setCardStatus] = useState<boolean>(false);
   const [cardContent, setCardContent] = useState<CardContent>({
-    comments: [{ id: 0, text: "null", user: "" }],
-    cardArrIdx: 0,
-    columnId: "",
+    comments: [],
     id: 0,
     name: "",
     text: "",

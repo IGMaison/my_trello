@@ -19,7 +19,7 @@ const Dashboard = ({cardContent, trelloData}:{cardContent: CardContent; trelloDa
             ) : (
                 <>NOTHING TO SHOW</>
             )}
-            <Card {...cardContent} />
+            <Card cardArrIdx={Infinity} newCard={true} columnId={''} {...cardContent} />
         </Main>
     );
 }

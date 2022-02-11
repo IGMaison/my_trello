@@ -2,14 +2,10 @@ export type CommentsType = { id: number; text: string; user: string };
 
 export type CardContent = {
     comments: CommentsType[],
-    cardArrIdx: number,
-    columnId: string,
-    columnName?: string,
     id: number,
     name: string,
     text: string,
     user: string,
-    newCard?: boolean;
 }
 
 export type DataType = {

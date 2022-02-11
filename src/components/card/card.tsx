@@ -13,7 +13,7 @@ import {ContxtType} from "../../App";
  * Это нужно делать через state и в state хранить название и все операции проводить над state,
  * если все это делать через ref, то начинает появляться куча хлама в компонентах и читаемость резко падает
  */
-const Card = (props: CardContent) => {
+const Card = (props: CardContent & {newCard:boolean; columnId:string; cardArrIdx: number}) => {
     const context: ContxtType = useContext(Context);
     /**
      * Убираем лишнее из компонентов, делаем их чистенькими
@@ -75,33 +75,37 @@ const Card = (props: CardContent) => {
     };
 
     function saveCard(ev: SyntheticEvent, isDelete = false) {
-
+        console.log(context.trelloData.columns[props.columnId].content)
         if (!(cardNameRef.current && cardNameRef.current.textContent) ||
             (cardNameRef.current.textContent.trim() == emptyName ||
                 !cardNameRef.current.textContent.trim())
         ) {
             return;
         }
-        const cardInfo = {
-            id: props.id,
-            name: cardNameRef.current && cardNameRef.current.textContent,
-            user: props.user,
-            text: String(cardTextRef.current && cardTextRef.current.textContent &&
-                cardTextRef.current.textContent.trim() == emptyText
-                ? ""
-                : cardTextRef.current && cardTextRef.current.textContent
-            ),
-            comments: [],
-        };
-        context.trelloData.columns[props.columnId].content.splice(
-            props.cardArrIdx,
-            !props.newCard || isDelete ? 1 : 0,
-            (() => {
-                if (!isDelete) {
-                    return cardInfo;
-                }
-            })() as unknown as CardContent
-        );
+
+        if (isDelete) {
+            context.trelloData.columns[props.columnId].content.splice(props.cardArrIdx, 1)
+        } else {
+            const cardContent = {
+                id: props.id,
+                name: cardNameRef.current && cardNameRef.current.textContent,
+                user: props.user,
+                text: String(cardTextRef.current && cardTextRef.current.textContent &&
+                    cardTextRef.current.textContent.trim() == emptyText
+                    ? ""
+                    : cardTextRef.current && cardTextRef.current.textContent
+                ),
+                comments: props.newCard ? [] : context.trelloData.columns[props.columnId].content[props.cardArrIdx].comments
+            }
+
+            context.trelloData.columns[props.columnId].content.splice(
+                props.cardArrIdx,
+                props.newCard ? 0 : 1,
+                cardContent as CardContent
+            );
+        }
+
+
         context.setTrelloData(storageService.setTrelloStorage(context.trelloData));
         CloseCard();
     }
@@ -123,10 +127,10 @@ const Card = (props: CardContent) => {
     return (
         <Fragment>
             {context.cardStatus && (
-                <Back>
+                <CardBackground>
                     <PopupCard>
 
-                        <ColumnTop>{props.columnName}</ColumnTop>
+                        <ColumnTop>{context.trelloData.columns[props.columnId].title || ""}</ColumnTop>
                         <CloseButton
                             onClick={CloseCard}
                             buttonStyle={buttonStyleEnum.ORANGE}
@@ -181,7 +185,7 @@ const Card = (props: CardContent) => {
                             Удалить карточку
                         </Button>}
                     </PopupCard>
-                </Back>
+                </CardBackground>
             )}
         </Fragment>
     );
@@ -194,7 +198,7 @@ const CloseButton = styled(Button)`
   background-color: #b7a186;
 `;
 
-const Back = styled.div`
+const CardBackground = styled.div`
   position: absolute;
   min-width: 100%;
   min-height: 100vh;

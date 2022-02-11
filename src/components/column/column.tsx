@@ -1,4 +1,4 @@
-import React, {Fragment, SyntheticEvent, useContext, useEffect, useState} from "react";
+import React, {SyntheticEvent, useContext, useEffect, useState} from "react";
 import styled from "styled-components";
 import CardSticker from "../card_sticker";
 import {Button} from "../UI";
@@ -6,10 +6,11 @@ import {buttonStyleEnum} from "../UI";
 import {Context} from "../../context";
 import {DataType, storageService} from "../services";
 import {ContxtType} from "../../App";
+import {CardContent} from "../services/storage_service";
 
 type PropsType = {
     id: string;
-    columnContent: { title: string; content: Array<object> };
+    columnContent: { title: string; content: Array<CardContent> };
 };
 
 const Column = ({id, columnContent}: PropsType) => {
@@ -20,7 +21,7 @@ const Column = ({id, columnContent}: PropsType) => {
     const [visibility, setVisibility] = useState(false);
 
     const newCardInfo = {
-        comments:[],
+        comments: [],
         id: Date.now(),
         cardArrIdx: Infinity,
         columnId: id,
@@ -55,7 +56,7 @@ const Column = ({id, columnContent}: PropsType) => {
             return;
         }
         setVisibility(false);
-        context.setTrelloData((():DataType=>{
+        context.setTrelloData(((): DataType => {
             context.trelloData.columns[id].title = inputValue;
             return storageService.setTrelloStorage(context.trelloData)
         })())
@@ -76,11 +77,7 @@ const Column = ({id, columnContent}: PropsType) => {
             <Content>
 
                 {visibility &&
-                <Fragment>
-                    <SaveButton
-                        value={'Сохранить'}
-                        onClick={saveColumnTitle}
-                        type="submit"/>
+                <ColumnInputBackground>
                     <Input
                         onChange={onChangeInput}
                         value={inputValue}
@@ -88,23 +85,26 @@ const Column = ({id, columnContent}: PropsType) => {
                         placeholder="ЗАГОЛОВОК КОЛОНКИ"
 
                     />
-                </Fragment>}
+                    <SaveButton
+                        value={'Сохранить'}
+                        onClick={saveColumnTitle}
+                        type="submit"/>
+                </ColumnInputBackground>
+                }
 
                 <ColumnTitle onClick={enterInput}>
                     {columnContent.title}
                 </ColumnTitle>
                 {/*TODO: что здесь делает any?*/}
-                {columnContent.content.map((card: any, idx) =>
-                    card ? (
+                {columnContent.content.map((CardContent: CardContent, idx) =>
+                    CardContent ? (
 
                         <CardSticker
-                            key={card.id}
-                            cardInfo={{
-                                columnId: id,
-                                columnName: columnContent.title,
-                                cardArrIdx: idx,
-                                ...card,
-                            }}
+                            newCard={false}
+                            columnId={id}
+                            key={CardContent.id}
+                            cardArrIdx={idx}
+                            {...CardContent}
                         />
                     ) : (
                         <></>
@@ -171,7 +171,7 @@ const Input = styled.input`
     color: #f004;
     text-transform: uppercase;
   }
-  position: absolute;
+  position: relative;
   top: 12px;
   left: 17px;
   border-radius: 3px;
@@ -186,10 +186,23 @@ const Input = styled.input`
   z-index: 9;
 `;
 
+const ColumnInputBackground = styled.div`
+    width: 331px;   
+    height: 66px;
+    background-color: #0000008c;
+    border-radius: 116px;
+    padding: 12p;
+    position: absolute;
+    top: -2px;   
+    left: -10px;
+    z-index: 9;
+    box-shadow: 0 0 25px 34px #0000008c;
+`
+
 const SaveButton = styled.input`
   position: absolute;
   top: 43px;
-  left: 17px;
+  left: 19px;
   z-index: 10;
   font-size: 14px;
   font-weight: 400;

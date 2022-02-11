@@ -4,7 +4,7 @@ import { Context } from "../../context";
 import {ContxtType} from "../../App";
 import {CardContent} from "../services/storage_service";
 
-const CardSticker = ({ cardInfo }: { cardInfo: CardContent }) => {
+const CardSticker = (cardInfo: CardContent & {newCard:boolean; columnId:string; cardArrIdx: number}) => {
   const context: ContxtType = useContext(Context);
 
     /**

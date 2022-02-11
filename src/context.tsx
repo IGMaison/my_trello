@@ -11,8 +11,6 @@ const defaultContext = {
     cardStatus: false,
     cardContent: {
         comments: [{ id: 0, text: "", user: "" }],
-        cardArrIdx: 0,
-        columnId: "",
         id: 0,
         name: "",
         text: "",
