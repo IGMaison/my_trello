@@ -7,11 +7,20 @@ import {CardContent} from "../services/storage_service";
 const CardSticker = ({ cardInfo }: { cardInfo: CardContent }) => {
   const context: ContxtType = useContext(Context);
 
+    /**
+     *
+     * TODO: я уже говорил как стоит називать обработчики
+     * или onCardStickerClick() или cardStickerClickHandler()
+     * с большой буквы именуются только компоненты
+     */
   function CardStickerClick(): void {
     context.setCardContent(cardInfo);
     context.setCardStatus(true);
   }
 
+  /**TODO: почему эта переменная is если она не boolean?
+     спецсимволы все равно мне ни о чем не говрят, ты сможешь через неделю по памяти сказать что такое &#9776; ?
+   **/
   let isCardInfo = cardInfo.text ? <>&#9776;&nbsp;&nbsp;&nbsp;</> : "";
   let commentsNumber = cardInfo.comments ? (
     <>&#9993; {cardInfo.comments.length}</>

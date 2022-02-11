@@ -8,18 +8,31 @@ import {storageService} from "../services";
 import {CardContent} from "../services/storage_service";
 import {ContxtType} from "../../App";
 
-
+/**
+ * Замечание в целом по компоненту, ты хочешь менять имя карточки, и все делаешь через ref
+ * Это нужно делать через state и в state хранить название и все операции проводить над state,
+ * если все это делать через ref, то начинает появляться куча хлама в компонентах и читаемость резко падает
+ */
 const Card = (props: CardContent) => {
     const context: ContxtType = useContext(Context);
+    /**
+     * Убираем лишнее из компонентов, делаем их чистенькими
+     */
     const emptyText =
         "Подробного описания нет, но прямо здесь его можно написать.";
     const emptyName = "Новый заголовок";
     let cardTextRef = React.createRef<HTMLDivElement>();
     let cardNameRef = React.createRef<HTMLDivElement>();
+    /**
+     * если boolean, то isButtonVisibility
+     */
     const [buttonVisibility, setButtonVisibility] = useState<boolean>(false);
 
     const clearCardText = () => {
         if (cardTextRef.current) {
+            /**
+             * Стили в стейте
+             */
             cardTextRef.current.style.backgroundColor = "white";
             setButtonVisibility(true);
             if (!(cardTextRef.current.textContent && cardTextRef.current.textContent.trim() != emptyText)) {

@@ -14,7 +14,9 @@ type PropsType = {
 
 const Column = ({id, columnContent}: PropsType) => {
     const context: ContxtType = useContext(Context);
+    //TODO: inputValue - что это за инпут, что в нем храниться?
     const [inputValue, setInputValue] = useState(columnContent.title);
+    //TODO: boolean - is
     const [visibility, setVisibility] = useState(false);
 
     const newCardInfo = {
@@ -91,7 +93,7 @@ const Column = ({id, columnContent}: PropsType) => {
                 <ColumnTitle onClick={enterInput}>
                     {columnContent.title}
                 </ColumnTitle>
-
+                {/*TODO: что здесь делает any?*/}
                 {columnContent.content.map((card: any, idx) =>
                     card ? (
 
