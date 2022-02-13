@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import Column from "../column";
 import Card from "../card";
 import styled from "styled-components";
 import {DataType} from "../services";
 import {CardContent} from "../services/storage_service";
+import {Context} from "../../context";
 
-const Dashboard = ({cardContent, trelloData}:{cardContent: CardContent; trelloData:DataType}) => {
+const Dashboard = ({cardContent, trelloData}: { cardContent: CardContent; trelloData: DataType }) => {
+    const context = useContext(Context)
+
     return (
         <Main>
             {Object.keys(trelloData.columns).length > 0 ? (
@@ -19,7 +22,9 @@ const Dashboard = ({cardContent, trelloData}:{cardContent: CardContent; trelloDa
             ) : (
                 <>NOTHING TO SHOW</>
             )}
-            <Card cardArrIdx={Infinity} newCard={true} columnId={''} {...cardContent} />
+
+            {context.isCardVisible &&
+            <Card cardArrIdx={Infinity} isNewCard={true} columnId={''} {...cardContent} />}
         </Main>
     );
 }

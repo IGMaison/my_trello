@@ -9,16 +9,16 @@ export type ContxtType = {
     userName: string,
     trelloData: DataType,
     setTrelloData: (x:DataType)=>void,
-    setCardStatus: (x:boolean)=>void,
+    setIsCardVisible: (x:boolean)=>void,
     setCardContent: (x:CardContent)=>void,
-    cardStatus: boolean,
+    isCardVisible: boolean,
     cardContent: CardContent,
 }
 
 function App() {
   const [userName, changeUserName] = useState<string>("");
   const [trelloData, setTrelloData] = useState<DataType>(storageService.emptyData);
-  const [cardStatus, setCardStatus] = useState<boolean>(false);
+  const [isCardVisible, setIsCardVisible] = useState<boolean>(false);
   const [cardContent, setCardContent] = useState<CardContent>({
     comments: [],
     id: 0,
@@ -35,9 +35,9 @@ function App() {
         userName,
         trelloData,
         setTrelloData,
-        setCardStatus,
+        setIsCardVisible,
         setCardContent,
-        cardStatus,
+        isCardVisible,
         cardContent,
       }}
     >

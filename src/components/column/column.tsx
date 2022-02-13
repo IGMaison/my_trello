@@ -7,6 +7,7 @@ import {Context} from "../../context";
 import {DataType, storageService} from "../services";
 import {ContxtType} from "../../App";
 import {CardContent} from "../services/storage_service";
+import {settings} from "../../settings";
 
 type PropsType = {
     id: string;
@@ -15,10 +16,10 @@ type PropsType = {
 
 const Column = ({id, columnContent}: PropsType) => {
     const context: ContxtType = useContext(Context);
-    //TODO: inputValue - что это за инпут, что в нем храниться?
-    const [inputValue, setInputValue] = useState(columnContent.title);
-    //TODO: boolean - is
-    const [visibility, setVisibility] = useState(false);
+    //TODO: inputValue - что это за инпут, что в нем храниться?V
+    const [ColumnTitleInputValue, setColumnTitleInputValue] = useState("");
+    //TODO: boolean - is V
+    const [isVisible, setIsVisible] = useState(false);
 
     const newCardInfo = {
         comments: [],
@@ -29,78 +30,82 @@ const Column = ({id, columnContent}: PropsType) => {
         name: "",
         text: "",
         user: context.userName,
-        newCard: true,
+        isNewCard: true,
     };
 
     function onChangeInput(ev: React.ChangeEvent<HTMLInputElement>) {
-        setInputValue(ev.target.value);
+        setColumnTitleInputValue(ev.target.value);
     }
 
-    function exitInput(ev: KeyboardEvent) {
-        if (ev.key === "Escape" || ev.key === undefined) {
-            setVisibility(false)
+    function onEscKeyDown(ev: KeyboardEvent) {
+        if (ev.key === "Escape") {
+            (()=>setIsVisible(false))()
         }
     }
 
     useEffect(() => {
-        document.addEventListener("keydown", exitInput);
+        document.addEventListener("keydown", onEscKeyDown);
         return () => {
-            document.removeEventListener("keydown", exitInput);
+            document.removeEventListener("keydown", onEscKeyDown);
         };
-    }, []);
+    }, [isVisible]);
 
-    function saveColumnTitle(ev: SyntheticEvent) {
+    useEffect(() => {
+        setColumnTitleInputValue(columnContent.title);
+    }, [isVisible]);
+
+    function onSaveColumnTitleClick(ev: SyntheticEvent) {
         ev.preventDefault();
-        if (!inputValue.trim()
+        if (!ColumnTitleInputValue.trim()
         ) {
             return;
         }
-        setVisibility(false);
+        setIsVisible(false);
         context.setTrelloData(((): DataType => {
-            context.trelloData.columns[id].title = inputValue;
+            context.trelloData.columns[id].title = ColumnTitleInputValue;
             return storageService.setTrelloStorage(context.trelloData)
         })())
     }
 
 
-    function addCard() {
-        context.setCardStatus(true);
+    function onAddCardClick() {
+        context.setIsCardVisible(true);
         context.setCardContent(newCardInfo);
     }
 
-    function enterInput() {
-        setVisibility(true);
+    function onColumnTitleClick() {
+        setIsVisible(true);
     }
 
     return (
         <ColumnWrapper>
             <Content>
 
-                {visibility &&
-                <ColumnInputBackground>
+                {isVisible &&
+                <ColumnTitleInputBackground>
                     <Input
                         onChange={onChangeInput}
-                        value={inputValue}
+                        value={ColumnTitleInputValue}
                         name="columnName"
-                        placeholder="ЗАГОЛОВОК КОЛОНКИ"
-
+                        placeholder={settings.column.namePlaceholder}
                     />
+
                     <SaveButton
-                        value={'Сохранить'}
-                        onClick={saveColumnTitle}
+                        value={settings.button.save}
+                        onClick={onSaveColumnTitleClick}
                         type="submit"/>
-                </ColumnInputBackground>
+                </ColumnTitleInputBackground>
                 }
 
-                <ColumnTitle onClick={enterInput}>
+                <ColumnTitle onClick={onColumnTitleClick}>
                     {columnContent.title}
                 </ColumnTitle>
-                {/*TODO: что здесь делает any?*/}
+
+                {/*TODO: что здесь делает any?V*/}
                 {columnContent.content.map((CardContent: CardContent, idx) =>
                     CardContent ? (
-
                         <CardSticker
-                            newCard={false}
+                            isNewCard={false}
                             columnId={id}
                             key={CardContent.id}
                             cardArrIdx={idx}
@@ -111,8 +116,8 @@ const Column = ({id, columnContent}: PropsType) => {
                     )
                 )}
 
-                <Button onClick={addCard} buttonStyle={buttonStyleEnum.STRING_GREY}>
-                    + Добавить карточку
+                <Button onClick={onAddCardClick} buttonStyle={buttonStyleEnum.STRING_GREY}>
+                    {settings.button.addCard}
 
                 </Button>
             </Content>
@@ -186,7 +191,7 @@ const Input = styled.input`
   z-index: 9;
 `;
 
-const ColumnInputBackground = styled.div`
+const ColumnTitleInputBackground = styled.div`
     width: 331px;   
     height: 66px;
     background-color: #0000008c;

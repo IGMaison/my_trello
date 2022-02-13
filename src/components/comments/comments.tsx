@@ -1,115 +1,103 @@
-import React, { SyntheticEvent, useContext, useRef, useState } from "react";
+import React, {useContext, useState} from "react";
 import styled from "styled-components";
 import CommentList from "./comment_list";
-import { Button, buttonStyleEnum } from "../UI";
-import { Context } from "../../context";
-import { storageService } from "../services";
+import {buttonStyleEnum} from "../UI";
+import {Context} from "../../context";
+import {storageService} from "../services";
 import {ContxtType} from "../../App";
+import {settings} from "../../settings";
+import {buttonStyle} from "../UI/button";
 
 type CommentsType = { id: number; text: string; user: string };
 
 const Comments = ({
-  comments,
-  columnId,
-  cardArrIdx,
-}: {
-  columnId: string;
-  cardArrIdx: number;
-  comments: Array<CommentsType>;
+                      comments,
+                      columnId,
+                      cardArrIdx,
+                  }: {
+    columnId: string;
+    cardArrIdx: number;
+    comments: Array<CommentsType>;
 }) => {
-  const context: ContxtType = useContext(Context);
-  const emptyComment = "Коммент писать здесь";
-  let newCommentRef = React.createRef<HTMLDivElement>();
-  const [buttonVisibility, setButtonVisibility] = useState(false);
-  const [newCommentColor, saveNewCommentColor] = useState("grey");
+    const context: ContxtType = useContext<ContxtType>(Context);
+    const emptyComment = settings.comments.newCommentPlaceholder;
+    const [SaveCommentButtonVisibility, setSaveCommentButtonVisibility] = useState<boolean>(false);
+    const [newComment, setNewComment] = useState<string>("");
 
-  const clearNewComment = (ev: SyntheticEvent) => {
-    if (newCommentRef.current) {
-      saveNewCommentColor("black");
-    setButtonVisibility(true);
-    if (!newCommentRef.current.textContent || newCommentRef.current.textContent.trim() == emptyComment) {
-      newCommentRef.current.textContent = "";
-    }}
-  };
-
-  const restoreNewComment = (ev: SyntheticEvent) => {
-    if (newCommentRef.current) {
-    if (!(newCommentRef.current.textContent && newCommentRef.current.textContent.trim())) {
-      newCommentRef.current.textContent = emptyComment;
-      setButtonVisibility(false);
-    }
-      saveNewCommentColor("grey");
-    }
-  };
-  const saveNewComment = (ev: React.MouseEvent<Element>) => {
-    if (!(newCommentRef.current && newCommentRef.current.textContent) ||
-        (newCommentRef.current.textContent.trim() == emptyComment ||
-      !newCommentRef.current.textContent.trim())
-    ) {
-      return;
-    }
-
-    const newCommentInfo = {
-      id: Date.now(),
-      text: newCommentRef.current.textContent,
-      user: context.userName,
+    const onNewCommentChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+        setNewComment(ev.target.value);
+        setSaveCommentButtonVisibility(!!ev.target.value);
     };
 
-    if (context.trelloData.columns[columnId].content[cardArrIdx].comments) {
-      context.trelloData.columns[columnId].content[cardArrIdx].comments.push(
-        newCommentInfo
-      );
-    } else {
-      context.trelloData.columns[columnId].content[cardArrIdx].comments = [
-        newCommentInfo,
-      ];
-    }
+    const onNewCommentSubmit = (ev: React.SyntheticEvent) => {
+        ev.preventDefault();
+        if (!newComment) {
+            return;
+        }
 
-    context.setTrelloData(storageService.setTrelloStorage(context.trelloData));
-    newCommentRef.current.textContent = emptyComment;
-    setButtonVisibility(false);
-  };
+        const newCommentInfo = {
+            id: Date.now(),
+            text: newComment,
+            user: context.userName,
+        };
 
-  return (
-    <CommentsBlock>
-      <h2>Комментарии</h2>
-
-      <CommentNew color={newCommentColor}>
-        <PostNew
-          ref={newCommentRef}
-          contentEditable="true"
-          onBlur={restoreNewComment}
-          onFocus={clearNewComment}
-          color={newCommentColor}
-        >
-          {emptyComment}
-        </PostNew>
-
-        {buttonVisibility && <Button
-          onClick={saveNewComment}
-          buttonStyle={buttonStyleEnum.ORANGE}
-        >
-          Сохранить
-        </Button>}
-      </CommentNew>
-      {comments
-        ? comments.map((comment: CommentsType, idx, comments) => {
-            let reverseIdx = comments.length - 1 - idx;
-            return (
-              <CommentList
-                key={comments[reverseIdx].id}
-                {...{
-                  commentArrIdx: reverseIdx,
-                  cardArrIdx: cardArrIdx,
-                  columnId: columnId,
-                  ...comments[reverseIdx],
-                }}
-              />
+        if (context.trelloData.columns[columnId].content[cardArrIdx].comments) {
+            context.trelloData.columns[columnId].content[cardArrIdx].comments.push(
+                newCommentInfo
             );
-          })
-        : "Напишите свой комментарий."}
-    </CommentsBlock>
-  );
+        } else {
+            context.trelloData.columns[columnId].content[cardArrIdx].comments = [
+                newCommentInfo,
+            ];
+        }
+
+        context.setTrelloData(storageService.setTrelloStorage(context.trelloData));
+        setNewComment("");
+        setSaveCommentButtonVisibility(false);
+    };
+
+    return (
+        <CommentsBlock>
+            <h2>{settings.comments.name}</h2>
+
+            <CommentNew>
+                <form onSubmit={onNewCommentSubmit}>
+                    <PostNew
+                        onChange={onNewCommentChange}
+                        autoComplete={"off"}
+                        name="newCommentName"
+                        value={newComment}
+                        placeholder={emptyComment}
+                    />
+
+
+                    {SaveCommentButtonVisibility && <Submit
+                        type="submit"
+                        name="submitNewComment"
+                        buttonStyle={buttonStyleEnum.ORANGE}
+                        value={settings.button.save}>
+                    </Submit>}
+                </form>
+            </CommentNew>
+
+            {comments.length
+                ? comments.map((comment: CommentsType, idx, comments) => {
+                    let reverseIdx = comments.length - 1 - idx;
+                    return (
+                        <CommentList
+                            key={comments[reverseIdx].id}
+                            {...{
+                                commentArrIdx: reverseIdx,
+                                cardArrIdx: cardArrIdx,
+                                columnId: columnId,
+                                ...comments[reverseIdx],
+                            }}
+                        />
+                    );
+                })
+                : settings.comments.welcomeText}
+        </CommentsBlock>
+    );
 };
 
 export default Comments;
@@ -132,11 +120,16 @@ const CommentNew = styled.div`
   width: 100%;
 `;
 
-const PostNew = styled.div`
+const PostNew = styled.input`
   border: 0 white;
   box-sizing: border-box;
-  color: ${({color}:{color:string}):string=>color};
-   margin: 0;
+  &: hover {
+    background-color: Azure;
+  }
+  &: focus {
+    background-color: white
+  }
+  margin: 0;
   font-size: 14px;
   overflow: hidden;
   padding: 8px;
@@ -148,3 +141,8 @@ const PostNew = styled.div`
   text-align: left;
   }
 `;
+
+const Submit = styled.input<{ buttonStyle: buttonStyleEnum }>`
+     ${buttonStyle[buttonStyleEnum.BASE]}
+     ${buttonStyle[buttonStyleEnum.ORANGE]}
+`

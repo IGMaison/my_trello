@@ -1,43 +1,41 @@
-import React, { useContext } from "react";
+import React, {useContext} from "react";
 import styled from "styled-components";
-import { Context } from "../../context";
+import {Context} from "../../context";
 import {ContxtType} from "../../App";
 import {CardContent} from "../services/storage_service";
+import {settings} from "../../settings"
 
-const CardSticker = (cardInfo: CardContent & {newCard:boolean; columnId:string; cardArrIdx: number}) => {
-  const context: ContxtType = useContext(Context);
+const CardSticker = (cardInfo: CardContent & { isNewCard: boolean; columnId: string; cardArrIdx: number }) => {
+    const context: ContxtType = useContext(Context);
 
     /**
      *
      * TODO: я уже говорил как стоит називать обработчики
-     * или onCardStickerClick() или cardStickerClickHandler()
-     * с большой буквы именуются только компоненты
+     * или onCardStickerClick() или cardStickerClickHandler()V
+     * с большой буквы именуются только компоненты V
      */
-  function CardStickerClick(): void {
-    context.setCardContent(cardInfo);
-    context.setCardStatus(true);
-  }
+    function onCardStickerClick(): void {
+        context.setCardContent(cardInfo);
+        context.setIsCardVisible(true);
+    }
 
-  /**TODO: почему эта переменная is если она не boolean?
+    /**TODO: почему эта переменная is если она не boolean?V
      спецсимволы все равно мне ни о чем не говрят, ты сможешь через неделю по памяти сказать что такое &#9776; ?
-   **/
-  let isCardInfo = cardInfo.text ? <>&#9776;&nbsp;&nbsp;&nbsp;</> : "";
-  let commentsNumber = cardInfo.comments ? (
-    <>&#9993; {cardInfo.comments.length}</>
-  ) : (
-    0
-  );
+     V**/
 
-  return (
-    <StickerBase onClick={CardStickerClick}>
-      <CardName>{cardInfo.name}</CardName>
+    return (
+        <StickerBase onClick={onCardStickerClick}>
+            <CardName>{cardInfo.name}</CardName>
 
-      <StickerProp>
-          <span title={"Наличие описания"}>{isCardInfo}</span>
-          <span title={"Количество комментариев"}>{commentsNumber}</span>
-      </StickerProp>
-    </StickerBase>
-  );
+            <StickerProp>
+                <span title={settings.cardSticker.cardInfoIconTitle}>{cardInfo.text ? settings.cardSticker.infoIcon : ""}</span>
+                <span
+                    title={settings.cardSticker.commentsNumberIconTitle}>{settings.cardSticker.commentsNumberIcon}
+                    {cardInfo.comments ? cardInfo.comments.length : 0}
+                </span>
+            </StickerProp>
+        </StickerBase>
+    );
 };
 
 export default CardSticker;

@@ -1,107 +1,115 @@
-import React, {Fragment, useContext, useEffect, useState} from "react";
+import React, {Fragment, useContext, useState} from "react";
 import styled from "styled-components";
-import { Context } from "../../../context";
+import {Context} from "../../../context";
 import {DataType, storageService} from "../../services";
-import { Button } from "../../UI";
-import { buttonStyleEnum } from "../../UI";
+import {Button} from "../../UI";
+import {buttonStyleEnum} from "../../UI";
 import {ContxtType} from "../../../App";
+import {settings} from "../../../settings";
+import {buttonStyle} from "../../UI/button";
 
 type PropsType = {
-  commentArrIdx: number;
-  cardArrIdx: number;
-  columnId: string;
-  id: number;
-  text: string;
-  user: string;
+    commentArrIdx: number;
+    cardArrIdx: number;
+    columnId: string;
+    id: number;
+    text: string;
+    user: string;
 };
 
 const CommentList = (props: PropsType) => {
-  const [postEditAbility, setPostEditAbility] = useState<boolean>(false);
-  const [commentIsDeleted, setCommentIsDeleted] = useState<boolean>(true);
-  const context: ContxtType = useContext(Context);
-  let commentRef = React.createRef<HTMLDivElement>();
+    const [isPostEditAbility, setIsPostEditAbility] = useState<boolean>(false);
+    const [commentIsDeleted, setCommentIsDeleted] = useState<boolean>(true);
+    const context: ContxtType = useContext(Context);
+    const [comment, setComment] = useState<string>(props.text)
 
-  useEffect(() => {
-    if (postEditAbility && commentRef.current) {
-      commentRef.current.focus();
+    function onNewCommentSubmit(ev: React.ChangeEvent<HTMLTextAreaElement>) {
+        setComment(ev.target.value)
     }
-  }, [postEditAbility]);
 
-  function saveComment(): void {
-    if (!(commentRef.current && commentRef.current.textContent) || !commentRef.current.textContent.trim()) {
-      return;
+    function onCommentSubmit(ev: React.SyntheticEvent): void {
+        ev.preventDefault();
+
+        if (!comment) {
+            onDeletePost()
+            return;
+        }
+
+        const newComment = {
+            id: props.id,
+            text: comment,
+            user: props.user,
+        };
+
+        context.setTrelloData(((): DataType => {
+            context.trelloData.columns[props.columnId].content[
+                props.cardArrIdx
+                ].comments[props.commentArrIdx] = newComment;
+            return storageService.setTrelloStorage(context.trelloData);
+        })());
+        setIsPostEditAbility(false);
     }
-    const newComment = {
-      id: props.id,
-      text: commentRef.current.textContent,
-      user: props.user,
-    };
-    context.setTrelloData((():DataType => {
-      context.trelloData.columns[props.columnId].content[
-        props.cardArrIdx
-      ].comments[props.commentArrIdx] = newComment;
-      return storageService.setTrelloStorage(context.trelloData);
-    })());
-    setPostEditAbility(false);
-  }
 
-  function deletePost(): void {
-    context.setTrelloData((():DataType => {
-      context.trelloData.columns[props.columnId].content[
-        props.cardArrIdx
-      ].comments.splice(props.commentArrIdx, 1);
-      return storageService.setTrelloStorage(context.trelloData);
-    })());
-    setCommentIsDeleted(false);
-  }
-  return (
-    <Fragment>
-      {commentIsDeleted && (
-        <CommentBody>
+    function onDeletePost(): void {
+        context.setTrelloData(((): DataType => {
+            context.trelloData.columns[props.columnId].content[
+                props.cardArrIdx
+                ].comments.splice(props.commentArrIdx, 1);
+            return storageService.setTrelloStorage(context.trelloData);
+        })());
+        setCommentIsDeleted(false);
+    }
 
-          Автор коммента: {props.user}
+    return (
+        <Fragment>
+            {commentIsDeleted && (
+                <CommentBody>{settings.comments.author} {props.user}
+                    <form onSubmit={onCommentSubmit}>
 
+                        {isPostEditAbility ? <PostEdit
+                                onChange={onNewCommentSubmit}
+                                autoComplete={"off"}
+                                name="newCommentName"
+                                value={comment}
+                            /> :
+                            <Post contentEditable={isPostEditAbility}>
+                                {comment}
+                            </Post>}
 
+                        <DeleteButton
+                            onClick={onDeletePost}
+                            buttonStyle={buttonStyleEnum.ORANGE}
+                        >{settings.button.x}
+                        </DeleteButton>
 
-          <Post ref={commentRef} contentEditable={postEditAbility}>
-            {props.text}
-          </Post><DeleteButton
-            onClick={deletePost}
-            buttonStyle={buttonStyleEnum.ORANGE}
-        >X
-        </DeleteButton>
-
-          {!postEditAbility ? (
-            <Button
-              onClick={() => {
-                setPostEditAbility(true);
-              }}
-              buttonStyle={buttonStyleEnum.GREY}
-            >
-              Изменить
-            </Button>
-
-          ) : (
-            <></>
-          )}
-          {postEditAbility ? (
-            <Button onClick={saveComment} buttonStyle={buttonStyleEnum.ORANGE}>
-              Сохранить
-            </Button>
-          ) : (
-            <></>
-          )}
-        </CommentBody>
-      )}
-    </Fragment>
-  );
+                        {!isPostEditAbility ?
+                            <Button
+                                onClick={() => {
+                                    setIsPostEditAbility(true);
+                                }}
+                                buttonStyle={buttonStyleEnum.GREY}
+                            >{settings.button.change}
+                            </Button>
+                            :
+                            <Submit
+                                type="submit"
+                                name="submitEditComment"
+                                buttonStyle={buttonStyleEnum.ORANGE}
+                                value={settings.button.save}>
+                            </Submit>
+                        }
+                    </form>
+                </CommentBody>
+            )}
+        </Fragment>
+    );
 };
 
 export default CommentList;
 
 const CommentBody = styled.div`
   box-sizing: border-box;
-  margin: 0;
+  margin-top: 0.5rem;
   padding: 0;
   position: relative;
   width: 100%;
@@ -130,3 +138,30 @@ const DeleteButton = styled(Button)`
   right: 0px;
   height: 35px;
 `
+
+const PostEdit = styled.textarea`
+  box-sizing: border-box;
+  color: black;
+  margin: 0;
+  font-size: 14px;
+  overflow: hidden;
+  padding: 8px;
+  position: relative;
+  background-color: #fff;
+  border-radius: 5px;
+  border: solid 1px #ddd;
+  width: 693px;
+  text-align: left;
+  display: inline-block;
+  background-color: white;
+  resize: none;
+  overflow: hidden;
+  &: hover {
+    background-color: Azure;
+  }
+`;
+
+const Submit = styled.input<{ buttonStyle: buttonStyleEnum }>`
+     ${buttonStyle[buttonStyleEnum.BASE]}
+     ${buttonStyle[buttonStyleEnum.ORANGE]}
+`;

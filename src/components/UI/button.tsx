@@ -13,29 +13,32 @@ export const Button = (props: PropsType) => {
 };
 
 
-export const ButtonStyled = styled.button<PropsType>`
-  font-size: 13px;
-  font-weight: 400;  
-  cursor: pointer;
-  &:hover {
-    background-color: lightblue;
-  }
-  &:active {
-    background-color: skyblue;
-  };
-   ${(props: PropsType): string => {
-    return buttonStyle[props.buttonStyle];
-
-}};
+export const ButtonStyled = styled.button`
+   ${(): string => buttonStyle[buttonStyleEnum.BASE]}
+   ${(props: PropsType): string => buttonStyle[props.buttonStyle]}
 `;
 
+
 export const enum buttonStyleEnum {
+    BASE,
     STRING_GREY = 1,
     ORANGE,
     GREY
 }
 
-const buttonStyle = {
+export const buttonStyle = {
+    [buttonStyleEnum.BASE]: `
+        font-size: 13px;
+        font-weight: 400;  
+        cursor: pointer;
+        &:hover {
+            background-color: lightblue;
+        }
+        &:active {
+            background-color: skyblue;
+        };
+    `,
+
     [buttonStyleEnum.STRING_GREY]: `
         color: #5e6c84;
         text-align: left;

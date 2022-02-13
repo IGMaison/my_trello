@@ -1,6 +1,7 @@
 import React, {SetStateAction, SyntheticEvent, useState} from "react";
 import styled from "styled-components";
 import {DataType, storageService} from "../services";
+import {settings} from "../../settings";
 
 type Props = {
     changeUserName: React.Dispatch<SetStateAction<string>>
@@ -13,28 +14,28 @@ const Welcome = ({changeUserName, setData}: Props) => {
         changeName(ev.target.value);
     };
 
-    const [visibility, changeVisibility] = useState<boolean>(true);
+    const [isVisible, setIsVisible] = useState<boolean>(true);
 
     const onSubmit = (ev: SyntheticEvent) => {
         if (name.trim()) {
             changeUserName(name.replace(/\s+/g, ' ').trim());
             setData(storageService.getTrelloStorage);
-            changeVisibility(false);
+            setIsVisible(false);
         }
         ev.preventDefault();
     };
 
     return (
-        (visibility) ? <WelcomeBackground>
+        (isVisible) ? <WelcomeBackground>
             <Popup>
                 <form onSubmit={onSubmit}>
                     <Input
                         onChange={onChange}
                         value={name}
                         name="userName"
-                        placeholder="Введите ваше имя здесь."
+                        placeholder={settings.welcome.placeholder}
                     />
-                    <Submit type="submit" value={`Далее >`}/>
+                    <Submit type="submit" value={settings.button.next}/>
                 </form>
             </Popup>
         </WelcomeBackground>

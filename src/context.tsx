@@ -6,9 +6,9 @@ const defaultContext = {
     userName: "",
     trelloData: storageService.emptyData,
     setTrelloData: (x:DataType)=>{},
-    setCardStatus: (x:boolean)=>{},
+    setIsCardVisible: (x:boolean)=>{},
     setCardContent: (x: CardContent)=>{},
-    cardStatus: false,
+    isCardVisible: false,
     cardContent: {
         comments: [{ id: 0, text: "", user: "" }],
         id: 0,
