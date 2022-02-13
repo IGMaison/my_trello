@@ -39,7 +39,7 @@ const Column = ({id, columnContent}: PropsType) => {
 
     function onEscKeyDown(ev: KeyboardEvent) {
         if (ev.key === "Escape") {
-            (()=>setIsVisible(false))()
+            (() => setIsVisible(false))()
         }
     }
 
@@ -83,17 +83,19 @@ const Column = ({id, columnContent}: PropsType) => {
 
                 {isVisible &&
                 <ColumnTitleInputBackground>
-                    <Input
-                        onChange={onChangeInput}
-                        value={ColumnTitleInputValue}
-                        name="columnName"
-                        placeholder={settings.column.namePlaceholder}
-                    />
+                    <form autoComplete={"off"}>
+                        <Input
+                            onChange={onChangeInput}
+                            value={ColumnTitleInputValue}
+                            name="columnName"
+                            placeholder={settings.column.namePlaceholder}
+                        />
 
-                    <SaveButton
-                        value={settings.button.save}
-                        onClick={onSaveColumnTitleClick}
-                        type="submit"/>
+                        <SaveButton
+                            value={settings.button.save}
+                            onClick={onSaveColumnTitleClick}
+                            type="submit"/>
+                    </form>
                 </ColumnTitleInputBackground>
                 }
 

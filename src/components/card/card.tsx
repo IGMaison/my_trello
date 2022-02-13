@@ -103,7 +103,7 @@ const Card = (props: CardContent & { isNewCard: boolean; columnId: string; cardA
                         {settings.button.x}
                     </CloseButton>
 
-                    <form onSubmit={onCardSubmit}>
+                    <form autoComplete={"off"} onSubmit={onCardSubmit}>
                         <CardName
                             onChange={onCardNameChange}
                             autoComplete={"off"}
