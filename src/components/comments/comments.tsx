@@ -121,12 +121,11 @@ const CommentNew = styled.div`
 `;
 
 const PostNew = styled.input`
-  border: 0 white;
   box-sizing: border-box;
-  &: hover {
+  &:hover {
     background-color: Azure;
   }
-  &: focus {
+  &:focus {
     background-color: white
   }
   margin: 0;
@@ -139,7 +138,6 @@ const PostNew = styled.input`
   border: solid 1px #daa;
   width: 100%;
   text-align: left;
-  }
 `;
 
 const Submit = styled.input<{ buttonStyle: buttonStyleEnum }>`

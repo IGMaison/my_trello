@@ -8,20 +8,10 @@ import {settings} from "../../settings"
 const CardSticker = (cardInfo: CardContent & { isNewCard: boolean; columnId: string; cardArrIdx: number }) => {
     const context: ContxtType = useContext(Context);
 
-    /**
-     *
-     * TODO: я уже говорил как стоит називать обработчики
-     * или onCardStickerClick() или cardStickerClickHandler()V
-     * с большой буквы именуются только компоненты V
-     */
     function onCardStickerClick(): void {
         context.setCardContent(cardInfo);
         context.setIsCardVisible(true);
     }
-
-    /**TODO: почему эта переменная is если она не boolean?V
-     спецсимволы все равно мне ни о чем не говрят, ты сможешь через неделю по памяти сказать что такое &#9776; ?
-     V**/
 
     return (
         <StickerBase onClick={onCardStickerClick}>

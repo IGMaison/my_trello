@@ -135,7 +135,7 @@ const DeleteButton = styled(Button)`
   float: right;
   position:relative;
   top: 1px;
-  right: 0px;
+  right: 0;
   height: 35px;
 `
 
@@ -147,7 +147,6 @@ const PostEdit = styled.textarea`
   overflow: hidden;
   padding: 8px;
   position: relative;
-  background-color: #fff;
   border-radius: 5px;
   border: solid 1px #ddd;
   width: 693px;
@@ -155,8 +154,7 @@ const PostEdit = styled.textarea`
   display: inline-block;
   background-color: white;
   resize: none;
-  overflow: hidden;
-  &: hover {
+  &:hover {
     background-color: Azure;
   }
 `;

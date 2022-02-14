@@ -9,23 +9,12 @@ import {ContxtType} from "../../App";
 import {settings} from "../../settings";
 import {buttonStyle} from "../UI/button";
 
-/**
- * Замечание в целом по компоненту, ты хочешь менять имя карточки, и все делаешь через ref
- * Это нужно делать через state и в state хранить название и все операции проводить над state,
- * если все это делать через ref, то начинает появляться куча хлама в компонентах и читаемость резко падает
-
-
- - так лучше?  */
 const Card = (props: CardContent & { isNewCard: boolean; columnId: string; cardArrIdx: number }) => {
         const context: ContxtType = useContext(Context);
-        /**
-         * Убираем лишнее из компонентов, делаем их чистенькими V
-         */
+
         const emptyText = settings.card.textPlaceholder;
         const emptyName = settings.card.namePlaceholder;
-        /**
-         * если boolean, то isButtonVisibility V
-         */
+
         const [isSaveButtonVisible, setIsSaveButtonVisible] = useState<boolean>(false);
         const [textValue, setTextValue] = useState<string>(props.text)
         const [nameValue, setNameValue] = useState<string>(props.name)
@@ -216,10 +205,10 @@ line-height: 1.3em;
 position: relative;
 display: flow-root;
 width: 95%;
-&: hover {
+&:hover {
     background-color: #dadbe0;
 }
-&: focus {
+&:focus {
     background-color: white
 }
 `;
@@ -246,10 +235,10 @@ width: 96%;
 font-size: 14px;
 border: #ccc 1px;
 border-style: none none solid solid;
-&: hover {
+&:hover {
     background-color: #dadbe0;
 }
-&: focus {
+&:focus {
     background-color: white
 }
 `;

@@ -80,8 +80,6 @@ const Input = styled.input`
   ::placeholder {
     color: #f004;
   }
-  autofocus: true;
-  placeholder: "placeholder";
   background-color: #fff;
   overflow-wrap: break-word;
   font-size: 24px;
@@ -97,7 +95,7 @@ const Submit = styled.input`
   border-radius: 3px;
   background-color: #e91;
   color: #fff;
-  border: 0px solid;
+  border: 0 solid;
   &:hover {
     background-color: lightblue;
   }

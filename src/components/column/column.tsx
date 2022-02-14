@@ -16,9 +16,8 @@ type PropsType = {
 
 const Column = ({id, columnContent}: PropsType) => {
     const context: ContxtType = useContext(Context);
-    //TODO: inputValue - что это за инпут, что в нем храниться?V
+
     const [ColumnTitleInputValue, setColumnTitleInputValue] = useState("");
-    //TODO: boolean - is V
     const [isVisible, setIsVisible] = useState(false);
 
     const newCardInfo = {
@@ -103,7 +102,6 @@ const Column = ({id, columnContent}: PropsType) => {
                     {columnContent.title}
                 </ColumnTitle>
 
-                {/*TODO: что здесь делает any?V*/}
                 {columnContent.content.map((CardContent: CardContent, idx) =>
                     CardContent ? (
                         <CardSticker
@@ -147,7 +145,7 @@ const ColumnTitle = styled.div`
   margin: 0;
   font-size: 15px;
   font-weight: 600;
-  padding: 10 px 8 px;
+  padding: 10px 8px;
   min-height: 20px;
   text-align: left;
   text-transform: uppercase;
@@ -182,8 +180,6 @@ const Input = styled.input`
   top: 12px;
   left: 17px;
   border-radius: 3px;
-  autofocus: true;
-  placeholder: "placeholder";
   background-color: #fff;
   overflow-wrap: break-word;
   font-size: 20px;
@@ -198,7 +194,7 @@ const ColumnTitleInputBackground = styled.div`
     height: 66px;
     background-color: #0000008c;
     border-radius: 116px;
-    padding: 12p;
+    padding: 12px;
     position: absolute;
     top: -2px;   
     left: -10px;
@@ -218,7 +214,7 @@ const SaveButton = styled.input`
   border-radius: 3px;
   background-color: #e91;
   color: #fff;
-  border: 0px solid;
+  border: 0 solid;
   &:hover {
     background-color: lightblue;
   }
