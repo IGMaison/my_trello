@@ -19,7 +19,7 @@ type PropsType = {
 
 const CommentList = (props: PropsType) => {
     const [isPostEditAbility, setIsPostEditAbility] = useState<boolean>(false);
-    const [commentIsDeleted, setCommentIsDeleted] = useState<boolean>(true);
+    const [commentIsDeleted, setCommentIsDeleted] = useState<boolean>(false);
     const context: ContxtType = useContext(Context);
     const [comment, setComment] = useState<string>(props.text)
 
@@ -57,12 +57,12 @@ const CommentList = (props: PropsType) => {
                 ].comments.splice(props.commentArrIdx, 1);
             return storageService.setTrelloStorage(context.trelloData);
         })());
-        setCommentIsDeleted(false);
+        setCommentIsDeleted(true);
     }
 
     return (
         <Fragment>
-            {commentIsDeleted && (
+            {!commentIsDeleted && (
                 <CommentBody>{settings.comments.author} {props.user}
                     <form onSubmit={onCommentSubmit}>
 
