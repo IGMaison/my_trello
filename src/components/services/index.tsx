@@ -1,5 +1,4 @@
-import { storageService, DataType } from "./storage_service";
+import { storageService } from "./storage_service";
 
 export { storageService }
-export type {DataType}
 

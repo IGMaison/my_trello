@@ -1,27 +1,25 @@
 import React, {Fragment, useContext, useState} from "react";
 import styled from "styled-components";
 import {Context} from "../../../context";
-import {DataType, storageService} from "../../services";
+import {storageService} from "../../services";
 import {Button} from "../../UI";
 import {buttonStyleEnum} from "../../UI";
 import {ContxtType} from "../../../App";
 import {settings} from "../../../settings";
 import {buttonStyle} from "../../UI/button";
+import {CommentType, DataType} from "../../../types";
 
 type PropsType = {
-    commentArrIdx: number;
-    cardArrIdx: number;
-    columnId: string;
-    id: number;
-    text: string;
-    user: string;
+    cardId: number;
+    columnId: number;
+    comment: CommentType
 };
 
-const CommentList = (props: PropsType) => {
+const CommentList = ({...props}: PropsType) => {
     const [isPostEditAbility, setIsPostEditAbility] = useState<boolean>(false);
     const [commentIsDeleted, setCommentIsDeleted] = useState<boolean>(false);
     const context: ContxtType = useContext(Context);
-    const [comment, setComment] = useState<string>(props.text)
+    const [comment, setComment] = useState<string>(props.comment.text)
 
     function onNewCommentSubmit(ev: React.ChangeEvent<HTMLTextAreaElement>) {
         setComment(ev.target.value)
@@ -36,15 +34,15 @@ const CommentList = (props: PropsType) => {
         }
 
         const newComment = {
-            id: props.id,
-            text: comment,
-            user: props.user,
+            id: props.comment.id,
+            text: props.comment.text,
+            user: props.comment.user,
         };
 
         context.setTrelloData(((): DataType => {
-            context.trelloData.columns[props.columnId].content[
-                props.cardArrIdx
-                ].comments[props.commentArrIdx] = newComment;
+            context.trelloData.columns[props.columnId].cards[
+                props.cardId
+                ].comments[props.comment.id] = newComment;
             return storageService.setTrelloStorage(context.trelloData);
         })());
         setIsPostEditAbility(false);
@@ -52,9 +50,9 @@ const CommentList = (props: PropsType) => {
 
     function onDeletePost(): void {
         context.setTrelloData(((): DataType => {
-            context.trelloData.columns[props.columnId].content[
-                props.cardArrIdx
-                ].comments.splice(props.commentArrIdx, 1);
+            context.trelloData.columns[props.columnId].cards[
+                props.cardId
+                ].comments.splice(props.comment.id, 1);
             return storageService.setTrelloStorage(context.trelloData);
         })());
         setCommentIsDeleted(true);
@@ -63,17 +61,17 @@ const CommentList = (props: PropsType) => {
     return (
         <Fragment>
             {!commentIsDeleted && (
-                <CommentBody>{settings.comments.author} {props.user}
+                <CommentBody>{settings.comments.author} {props.comment.user}
                     <form onSubmit={onCommentSubmit}>
 
                         {isPostEditAbility ? <PostEdit
                                 onChange={onNewCommentSubmit}
                                 autoComplete={"off"}
                                 name="newCommentName"
-                                value={comment}
+                                value={props.comment.text}
                             /> :
                             <Post contentEditable={isPostEditAbility}>
-                                {comment}
+                                {props.comment.text}
                             </Post>}
 
                         <DeleteButton

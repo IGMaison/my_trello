@@ -1,36 +1,24 @@
 import React, {SyntheticEvent, useContext, useEffect, useState} from "react";
 import styled from "styled-components";
-import CardSticker from "../card_sticker";
+import Card from "../card";
 import {Button} from "../UI";
 import {buttonStyleEnum} from "../UI";
 import {Context} from "../../context";
-import {DataType, storageService} from "../services";
+import {storageService} from "../services";
 import {ContxtType} from "../../App";
-import {CardContent} from "../services/storage_service";
 import {settings} from "../../settings";
+import {CardType, ColumnsType} from "../../types";
 
 type PropsType = {
-    id: string;
-    columnContent: { title: string; content: Array<CardContent> };
+    key: number;
+    column: ColumnsType;
 };
 
-const Column = ({id, columnContent}: PropsType) => {
+const Column = ({key, column}: PropsType) => {
     const context: ContxtType = useContext(Context);
 
-    const [ColumnTitleInputValue, setColumnTitleInputValue] = useState("");
+    const [columnTitleInputValue, setColumnTitleInputValue] = useState("");
     const [isVisible, setIsVisible] = useState(false);
-
-    const newCardInfo = {
-        comments: [],
-        id: Date.now(),
-        cardArrIdx: Infinity,
-        columnId: id,
-        columnName: columnContent.title,
-        name: "",
-        text: "",
-        user: context.userName,
-        isNewCard: true,
-    };
 
     function onChangeInput(ev: React.ChangeEvent<HTMLInputElement>) {
         setColumnTitleInputValue(ev.target.value);
@@ -50,31 +38,29 @@ const Column = ({id, columnContent}: PropsType) => {
     }, [isVisible]);
 
     useEffect(() => {
-        setColumnTitleInputValue(columnContent.title);
+        setColumnTitleInputValue(column.title);
     }, [isVisible]);
 
     function onSaveColumnTitleClick(ev: SyntheticEvent) {
         ev.preventDefault();
-        if (!ColumnTitleInputValue.trim()
+        if (!columnTitleInputValue.trim()
         ) {
             return;
         }
         setIsVisible(false);
-        context.setTrelloData(((): DataType => {
-            context.trelloData.columns[id].title = ColumnTitleInputValue;
-            return storageService.setTrelloStorage(context.trelloData)
-        })())
+        storageService.editColumnTitle(key, columnTitleInputValue)
     }
 
 
     function onAddCardClick() {
         context.setIsCardVisible(true);
-        context.setCardContent(newCardInfo);
+        context.setCardContent(0);
     }
 
     function onColumnTitleClick() {
         setIsVisible(true);
     }
+
 
     return (
         <ColumnWrapper>
@@ -85,7 +71,7 @@ const Column = ({id, columnContent}: PropsType) => {
                     <form autoComplete={"off"}>
                         <Input
                             onChange={onChangeInput}
-                            value={ColumnTitleInputValue}
+                            value={columnTitleInputValue}
                             name="columnName"
                             placeholder={settings.column.namePlaceholder}
                         />
@@ -99,17 +85,14 @@ const Column = ({id, columnContent}: PropsType) => {
                 }
 
                 <ColumnTitle onClick={onColumnTitleClick}>
-                    {columnContent.title}
+                    {column.title}
                 </ColumnTitle>
 
-                {columnContent.content.map((CardContent: CardContent, idx) =>
-                    CardContent ? (
-                        <CardSticker
-                            isNewCard={false}
-                            columnId={id}
-                            key={CardContent.id}
-                            cardArrIdx={idx}
-                            {...CardContent}
+                {column.cards.map((card: CardType) =>
+                    card ? (
+                        <Card
+                            cardId={card.id}
+                            columnId={key}
                         />
                     ) : (
                         <></>

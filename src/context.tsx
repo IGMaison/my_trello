@@ -1,21 +1,17 @@
 import React from 'react'
-import {DataType, storageService} from "./components/services";
-import {CardContent} from "./components/services/storage_service";
+import {DataType} from "./types";
+import {settings} from "./settings";
+
+type CardContentType = {cardId: number; isCardVisible: boolean}
 
 const defaultContext = {
     userName: "",
-    trelloData: storageService.emptyData,
+    trelloData: settings.emptyData as DataType,
     setTrelloData: (x:DataType)=>{},
     setIsCardVisible: (x:boolean)=>{},
-    setCardContent: (x: CardContent)=>{},
+    setCardContent: (x: number)=>{},
     isCardVisible: false,
-    cardContent: {
-        comments: [{ id: 0, text: "", user: "" }],
-        id: 0,
-        name: "",
-        text: "",
-        user: "",
-    }
+    cardContent: 0
 }
 export const Context = React.createContext(defaultContext)
 

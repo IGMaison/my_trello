@@ -1,7 +1,8 @@
 import React, {SetStateAction, SyntheticEvent, useState} from "react";
 import styled from "styled-components";
-import {DataType, storageService} from "../services";
+import {storageService} from "../services";
 import {settings} from "../../settings";
+import {DataType} from "../../types";
 
 type Props = {
     changeUserName: React.Dispatch<SetStateAction<string>>

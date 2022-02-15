@@ -7,17 +7,17 @@ import {storageService} from "../services";
 import {ContxtType} from "../../App";
 import {settings} from "../../settings";
 import {buttonStyle} from "../UI/button";
+import {CommentType} from "../../types";
 
-type CommentsType = { id: number; text: string; user: string };
 
 const Comments = ({
                       comments,
                       columnId,
-                      cardArrIdx,
+                      cardId,
                   }: {
-    columnId: string;
-    cardArrIdx: number;
-    comments: Array<CommentsType>;
+    columnId: number;
+    cardId: number;
+    comments: Array<CommentType>;
 }) => {
     const context: ContxtType = useContext<ContxtType>(Context);
     const emptyComment = settings.comments.newCommentPlaceholder;
@@ -41,17 +41,7 @@ const Comments = ({
             user: context.userName,
         };
 
-        if (context.trelloData.columns[columnId].content[cardArrIdx].comments) {
-            context.trelloData.columns[columnId].content[cardArrIdx].comments.push(
-                newCommentInfo
-            );
-        } else {
-            context.trelloData.columns[columnId].content[cardArrIdx].comments = [
-                newCommentInfo,
-            ];
-        }
-
-        context.setTrelloData(storageService.setTrelloStorage(context.trelloData));
+        storageService.saveNewComment(columnId, cardId, newCommentInfo, !comments)
         setNewComment("");
         setSaveCommentButtonVisibility(false);
     };
@@ -81,20 +71,11 @@ const Comments = ({
             </CommentNew>
 
             {comments.length
-                ? comments.map((comment: CommentsType, idx, comments) => {
-                    let reverseIdx = comments.length - 1 - idx;
-                    return (
-                        <CommentList
-                            key={comments[reverseIdx].id}
-                            {...{
-                                commentArrIdx: reverseIdx,
-                                cardArrIdx: cardArrIdx,
-                                columnId: columnId,
-                                ...comments[reverseIdx],
-                            }}
-                        />
-                    );
-                })
+                ? comments.map((comment: CommentType) =>
+                    <CommentList
+                        columnId={columnId}
+                        cardId={cardId}
+                        comment={comment}/>)
                 : settings.comments.welcomeText}
         </CommentsBlock>
     );
@@ -114,7 +95,7 @@ const CommentsBlock = styled.div`
 
 const CommentNew = styled.div`
   box-sizing: border-box;
- margin-bottom: 2em;
+  margin-bottom: 2em;
   padding: 0;
   position: relative;
   width: 100%;
@@ -122,12 +103,15 @@ const CommentNew = styled.div`
 
 const PostNew = styled.input`
   box-sizing: border-box;
+
   &:hover {
     background-color: Azure;
   }
+
   &:focus {
     background-color: white
   }
+
   margin: 0;
   font-size: 14px;
   overflow: hidden;
@@ -141,6 +125,6 @@ const PostNew = styled.input`
 `;
 
 const Submit = styled.input<{ buttonStyle: buttonStyleEnum }>`
-     ${buttonStyle[buttonStyleEnum.BASE]}
-     ${buttonStyle[buttonStyleEnum.ORANGE]}
+  ${buttonStyle[buttonStyleEnum.BASE]}
+  ${buttonStyle[buttonStyleEnum.ORANGE]}
 `

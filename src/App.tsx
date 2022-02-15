@@ -1,31 +1,26 @@
 import React, { useState } from "react";
 import Welcome from "./components/welcome";
-import {DataType, storageService} from "./components/services";
 import { Context } from "./context";
 import Dashboard from "./components/dashboard";
-import {CardContent} from "./components/services/storage_service";
+import {DataType} from "./types";
+import {settings} from "./settings";
 
 export type ContxtType = {
     userName: string,
     trelloData: DataType,
     setTrelloData: (x:DataType)=>void,
     setIsCardVisible: (x:boolean)=>void,
-    setCardContent: (x:CardContent)=>void,
+    setCardContent: (x:number)=>void,
     isCardVisible: boolean,
-    cardContent: CardContent,
+    cardContent: number,
 }
 
 function App() {
   const [userName, changeUserName] = useState<string>("");
-  const [trelloData, setTrelloData] = useState<DataType>(storageService.emptyData);
+  const [trelloData, setTrelloData] = useState<DataType>(settings.emptyData);
   const [isCardVisible, setIsCardVisible] = useState<boolean>(false);
-  const [cardContent, setCardContent] = useState<CardContent>({
-    comments: [],
-    id: 0,
-    name: "",
-    text: "",
-    user: "",
-  });
+  const [cardContent, setCardContent] = useState<number>(0);
+
 
 
 
@@ -41,7 +36,7 @@ function App() {
         cardContent,
       }}
     >
-      <Dashboard cardContent={cardContent} trelloData={trelloData}/>
+          <Dashboard cardContent={cardContent} trelloData={trelloData}/>
       <Welcome changeUserName={changeUserName} setData={setTrelloData} />
     </Context.Provider>
   );
