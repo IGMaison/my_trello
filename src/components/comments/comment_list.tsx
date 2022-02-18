@@ -1,28 +1,27 @@
 import React, {useContext, useState} from "react";
 import styled from "styled-components";
-import CommentList from "./comment_list";
 import {buttonStyleEnum} from "../UI";
 import {Context} from "../../context";
-import {storageService} from "../services";
-import {ContxtType} from "../../App";
+import {storageService} from "../../App";
 import {settings} from "../../settings";
 import {buttonStyle} from "../UI/button";
+import {CommentType} from "../../types";
+import {ContxtType} from "../../types/types";
+import Comment from "./comment";
 
-type CommentsType = { id: number; text: string; user: string };
 
-const Comments = ({
-                      comments,
-                      columnId,
-                      cardArrIdx,
-                  }: {
-    columnId: string;
-    cardArrIdx: number;
-    comments: Array<CommentsType>;
-}) => {
+type PropsType = {
+    columnId: number;
+    cardId: number;
+    comments: CommentType[];
+}
+
+const Comments : React.FC<PropsType> = ({comments, columnId, cardId,}) => {
     const context: ContxtType = useContext<ContxtType>(Context);
-    const emptyComment = settings.comments.newCommentPlaceholder;
+
     const [SaveCommentButtonVisibility, setSaveCommentButtonVisibility] = useState<boolean>(false);
     const [newComment, setNewComment] = useState<string>("");
+    const [currComments, setCurrComments] = useState<CommentType[]>(comments)
 
     const onNewCommentChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
         setNewComment(ev.target.value);
@@ -35,26 +34,17 @@ const Comments = ({
             return;
         }
 
-        const newCommentInfo = {
+        const newCommentInfo: CommentType = {
             id: Date.now(),
             text: newComment,
             user: context.userName,
         };
 
-        if (context.trelloData.columns[columnId].content[cardArrIdx].comments) {
-            context.trelloData.columns[columnId].content[cardArrIdx].comments.push(
-                newCommentInfo
-            );
-        } else {
-            context.trelloData.columns[columnId].content[cardArrIdx].comments = [
-                newCommentInfo,
-            ];
-        }
-
-        context.setTrelloData(storageService.setTrelloStorage(context.trelloData));
+        storageService.saveNewComment(columnId, cardId, newCommentInfo, context.trelloData)
         setNewComment("");
         setSaveCommentButtonVisibility(false);
     };
+
 
     return (
         <CommentsBlock>
@@ -67,7 +57,7 @@ const Comments = ({
                         autoComplete={"off"}
                         name="newCommentName"
                         value={newComment}
-                        placeholder={emptyComment}
+                        placeholder={settings.comments.newCommentPlaceholder}
                     />
 
 
@@ -80,25 +70,21 @@ const Comments = ({
                 </form>
             </CommentNew>
 
-            {comments.length
-                ? comments.map((comment: CommentsType, idx, comments) => {
-                    let reverseIdx = comments.length - 1 - idx;
-                    return (
-                        <CommentList
-                            key={comments[reverseIdx].id}
-                            {...{
-                                commentArrIdx: reverseIdx,
-                                cardArrIdx: cardArrIdx,
-                                columnId: columnId,
-                                ...comments[reverseIdx],
-                            }}
-                        />
-                    );
-                })
+            {currComments.map((comment: CommentType) => {
+                return (
+                    <Comment
+                        key={comment.id}
+                        setCurrComments={setCurrComments}
+                        columnId={columnId}
+                        cardId={cardId}
+                        comment={comment}/>)
+            })}
+            {!!comments.length
+                ? <></>
                 : settings.comments.welcomeText}
         </CommentsBlock>
     );
-};
+}
 
 export default Comments;
 
@@ -114,7 +100,7 @@ const CommentsBlock = styled.div`
 
 const CommentNew = styled.div`
   box-sizing: border-box;
- margin-bottom: 2em;
+  margin-bottom: 2em;
   padding: 0;
   position: relative;
   width: 100%;
@@ -122,12 +108,15 @@ const CommentNew = styled.div`
 
 const PostNew = styled.input`
   box-sizing: border-box;
+
   &:hover {
     background-color: Azure;
   }
+
   &:focus {
     background-color: white
   }
+
   margin: 0;
   font-size: 14px;
   overflow: hidden;
@@ -141,6 +130,6 @@ const PostNew = styled.input`
 `;
 
 const Submit = styled.input<{ buttonStyle: buttonStyleEnum }>`
-     ${buttonStyle[buttonStyleEnum.BASE]}
-     ${buttonStyle[buttonStyleEnum.ORANGE]}
+  ${buttonStyle[buttonStyleEnum.BASE]}
+  ${buttonStyle[buttonStyleEnum.ORANGE]}
 `
