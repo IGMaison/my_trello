@@ -1,17 +1,16 @@
 import React from 'react'
 import {DataType} from "./types";
 import {settings} from "./settings";
+import {ContxtType} from "./types/types";
 
-type CardContentType = {cardId: number; isCardVisible: boolean}
-
-const defaultContext = {
+const defaultContext: ContxtType = {
     userName: "",
     trelloData: settings.emptyData as DataType,
-    setTrelloData: (x:DataType)=>{},
-    setIsCardVisible: (x:boolean)=>{},
-    setCardContent: (x: number)=>{},
+    setTrelloData: ()=>{},
+    setIsCardVisible: ()=>{},
+    setCardModal: ()=>{},
     isCardVisible: false,
-    cardContent: 0
+    cardModal: {card:settings.card.emptyCard, columnId:0, isNew:true}
 }
 export const Context = React.createContext(defaultContext)
 

@@ -1,4 +1,4 @@
-import { storageService } from "./storage_service";
+import { StorageService } from "./storage_service";
 
-export { storageService }
+export { StorageService }
 

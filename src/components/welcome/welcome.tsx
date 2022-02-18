@@ -1,15 +1,14 @@
 import React, {SetStateAction, SyntheticEvent, useState} from "react";
 import styled from "styled-components";
-import {storageService} from "../services";
 import {settings} from "../../settings";
-import {DataType} from "../../types";
+import {storageService} from "../../App";
 
-type Props = {
+type PropsType = {
     changeUserName: React.Dispatch<SetStateAction<string>>
-    setData: React.Dispatch<SetStateAction<DataType>>;
 };
-const Welcome = ({changeUserName, setData}: Props) => {
+const Welcome: React.FC<PropsType> = ({changeUserName}) => {
     const [name, changeName] = useState("");
+
 
     const onChange = (ev: React.ChangeEvent<HTMLInputElement>): void => {
         changeName(ev.target.value);
@@ -20,7 +19,7 @@ const Welcome = ({changeUserName, setData}: Props) => {
     const onSubmit = (ev: SyntheticEvent) => {
         if (name.trim()) {
             changeUserName(name.replace(/\s+/g, ' ').trim());
-            setData(storageService.getTrelloStorage);
+            storageService.initTrelloData()
             setIsVisible(false);
         }
         ev.preventDefault();
@@ -28,20 +27,20 @@ const Welcome = ({changeUserName, setData}: Props) => {
 
     return (
         (isVisible) ? <WelcomeBackground>
-            <Popup>
-                <form onSubmit={onSubmit}>
-                    <Input
-                        onChange={onChange}
-                        value={name}
-                        name="userName"
-                        placeholder={settings.welcome.placeholder}
-                    />
-                    <Submit type="submit" value={settings.button.next}/>
-                </form>
-            </Popup>
-        </WelcomeBackground>
-        :
-        <></>
+                <Popup>
+                    <form onSubmit={onSubmit}>
+                        <Input
+                            onChange={onChange}
+                            value={name}
+                            name="userName"
+                            placeholder={settings.welcome.placeholder}
+                        />
+                        <Submit type="submit" value={settings.button.next}/>
+                    </form>
+                </Popup>
+            </WelcomeBackground>
+            :
+            <></>
     );
 };
 
@@ -81,6 +80,7 @@ const Input = styled.input`
   ::placeholder {
     color: #f004;
   }
+
   background-color: #fff;
   overflow-wrap: break-word;
   font-size: 24px;
@@ -97,9 +97,11 @@ const Submit = styled.input`
   background-color: #e91;
   color: #fff;
   border: 0 solid;
+
   &:hover {
     background-color: lightblue;
   }
+
   &:active {
     background-color: skyblue;
   }

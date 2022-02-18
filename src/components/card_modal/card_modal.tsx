@@ -3,23 +3,28 @@ import styled from "styled-components";
 import {Button, buttonStyleEnum} from "../UI";
 import Comments from "../comments";
 import {Context} from "../../context";
-import {storageService} from "../services";
-import {ContxtType} from "../../App";
+import {storageService} from "../../App";
 import {settings} from "../../settings";
 import {buttonStyle} from "../UI/button";
-import {CardType} from "../../types";
+import {CardModalType, ContxtType} from "../../types/types";
 
-const CardModal = ({cardId, columnId}:{cardId:number; columnId: number}) => {
+type PropsType = {
+    cardModal: CardModalType
+}
+
+const CardModal: React.FC<PropsType> = ({cardModal}) => {
         const context: ContxtType = useContext(Context);
 
-        const emptyText = settings.card.textPlaceholder;
-        const emptyName = settings.card.namePlaceholder;
-
-        let cardInfo: CardType = context.trelloData.columns[columnId].cards.filter((card) => card.id === cardId)[0]
+        // let card: CardType = settings.card.emptyCard
+        // card.user = context.userName
+        //
+        // if (context.cardModal.card.id) {
+        //     card = context.cardModal.card
+        // }
 
         const [isSaveButtonVisible, setIsSaveButtonVisible] = useState<boolean>(false);
-        const [textValue, setTextValue] = useState<string>(cardInfo.text)
-        const [nameValue, setNameValue] = useState<string>(cardInfo.name)
+        const [textValue, setTextValue] = useState<string>(cardModal.card.text)
+        const [nameValue, setNameValue] = useState<string>(cardModal.card.name)
 
 
         const onCardNameChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,22 +50,21 @@ const CardModal = ({cardId, columnId}:{cardId:number; columnId: number}) => {
 
             if (isDelete) {
 
-                storageService.deleteCard(columnId,cardId);
+                storageService.deleteCard(cardModal.columnId, cardModal.card.id, context.trelloData);
 
             } else {
                 const cardEdited = {
-                    id: cardId ? cardId : Date.now(),
+                    id: cardModal.card.id,
                     name: nameValue,
-                    user: cardInfo.user,
+                    user:cardModal.card.user,
                     text: textValue
                     ,
-                    comments: !cardId ? [] : cardInfo.comments
+                    comments: !cardModal.card.comments.length ? [] : cardModal.card.comments
                 }
 
-               storageService.SaveCard(columnId, cardEdited)
+                storageService.SaveCard(cardModal.columnId, cardEdited, context.trelloData)
             }
 
-            context.setTrelloData(storageService.setTrelloStorage(context.trelloData));
             onCloseCardClick();
         }
 
@@ -83,7 +87,7 @@ const CardModal = ({cardId, columnId}:{cardId:number; columnId: number}) => {
             <CardBackground>
                 <PopupCard>
 
-                    <ColumnTop>{context.trelloData.columns[columnId].title || ""}</ColumnTop>
+                    <ColumnTop>{context.trelloData.columns.filter((column) => column.id === cardModal.columnId)[0].title || ""}</ColumnTop>
                     <CloseButton
                         onClick={onCloseCardClick}
                         buttonStyle={buttonStyleEnum.ORANGE}
@@ -97,7 +101,7 @@ const CardModal = ({cardId, columnId}:{cardId:number; columnId: number}) => {
                             autoComplete={"off"}
                             name="cardName"
                             value={nameValue}
-                            placeholder={emptyName}
+                            placeholder={settings.card.namePlaceholder}
                         />
 
                         {isSaveButtonVisible && <Submit
@@ -110,7 +114,7 @@ const CardModal = ({cardId, columnId}:{cardId:number; columnId: number}) => {
                         </Submit>}
 
 
-                        <Author>{settings.card.creator} {cardInfo.user}</Author>
+                        <Author>{settings.card.creator} {cardModal.card.user}</Author>
 
 
                         <ContHeader>{settings.card.text}</ContHeader>
@@ -120,19 +124,19 @@ const CardModal = ({cardId, columnId}:{cardId:number; columnId: number}) => {
                             onChange={onCardTextChange}
                             name="cardName"
                             value={textValue}
-                            placeholder={emptyText}
+                            placeholder={settings.card.textPlaceholder}
                         />
                     </form>
 
-                    {cardId || (
+                    {!cardModal.isNew && (
                         <Comments
-                            columnId={columnId}
-                            cardId={cardId}
-                            comments={cardInfo.comments}
+                            columnId={cardModal.columnId}
+                            cardId={cardModal.card.id}
+                            comments={context.trelloData.columns.filter((column) => column.id === cardModal.columnId)[0].cards.filter((card) => card.id === cardModal.card.id)[0].comments}
                         />
                     )}
 
-                    {!cardId && <ButtonDel
+                    {!!cardModal.card.id && <ButtonDel
                         onClick={(ev) => onCardSubmit(ev, true)}
                         buttonStyle={buttonStyleEnum.STRING_GREY}
                     >

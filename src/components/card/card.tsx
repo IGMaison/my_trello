@@ -1,38 +1,41 @@
 import React, {useContext} from "react";
 import styled from "styled-components";
 import {Context} from "../../context";
-import {ContxtType} from "../../App";
-import {settings} from "../../settings"
+import {CardType, ContxtType} from "../../types/types";
+import {settings} from "../../settings";
 
-const Card = ( {columnId, cardId}:{columnId: number; cardId: number}) => {
+type PropsType = {
+    columnId: number,
+    card: CardType
+}
+
+const Card : React.FC<PropsType> = ({columnId, card}) => {
     const context: ContxtType = useContext(Context);
 
-    let cardInfo = context.trelloData.columns[columnId].cards.filter((card)=>card.id===cardId)[0]
-
-    const onCardClick = (cardId: number) => () => {
-        context.setCardContent(cardId);
+    const onCardClick = () => {
+        context.setCardModal({card: card, columnId: columnId, isNew:false});
         context.setIsCardVisible(true);
     }
 
     return (
-        <StickerBase
-            onClick={onCardClick(cardId)}>
-            <CardName>{cardInfo.name}</CardName>
+        <CardBase
+            onClick={onCardClick}>
+            <CardName>{card.name}</CardName>
 
-            <StickerProp>
-                <span title={settings.cardSticker.cardInfoIconTitle}>{cardInfo.text ? settings.cardSticker.infoIcon : ""}</span>
+            <CardPropIcons>
+                <span title={settings.cardSticker.cardInfoIconTitle}>{card.text ? settings.cardSticker.infoIcon : ""}</span>
                 <span
                     title={settings.cardSticker.commentsNumberIconTitle}>{settings.cardSticker.commentsNumberIcon}
-                    {cardInfo.comments.length}
+                    {card.comments.length}
                 </span>
-            </StickerProp>
-        </StickerBase>
+            </CardPropIcons>
+        </CardBase>
     );
 };
 
 export default Card;
 
-const StickerBase = styled.div`
+const CardBase = styled.div`
   border: 0 white;
   box-sizing: border-box;
   color: black;
@@ -50,9 +53,11 @@ const StickerBase = styled.div`
   min-height: 20px;
   text-decoration: none;
   text-align: left;
+
   &:hover {
     background-color: Azure;
   }
+
   &:active {
     background-color: lightCyan;
   }
@@ -68,7 +73,7 @@ const CardName = styled.div`
   display: flow-root;
 `;
 
-const StickerProp = styled.div`
+const CardPropIcons = styled.div`
   color: black;
   margin: 0;
   padding: 0;

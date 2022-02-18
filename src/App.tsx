@@ -1,45 +1,38 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import Welcome from "./components/welcome";
-import { Context } from "./context";
+import {Context} from "./context";
 import Dashboard from "./components/dashboard";
 import {DataType} from "./types";
 import {settings} from "./settings";
+import {StorageService} from "./components/services";
+import {CardModalType} from "./types/types";
 
-export type ContxtType = {
-    userName: string,
-    trelloData: DataType,
-    setTrelloData: (x:DataType)=>void,
-    setIsCardVisible: (x:boolean)=>void,
-    setCardContent: (x:number)=>void,
-    isCardVisible: boolean,
-    cardContent: number,
-}
+export let storageService = new StorageService(localStorage);
 
 function App() {
-  const [userName, changeUserName] = useState<string>("");
-  const [trelloData, setTrelloData] = useState<DataType>(settings.emptyData);
-  const [isCardVisible, setIsCardVisible] = useState<boolean>(false);
-  const [cardContent, setCardContent] = useState<number>(0);
+    const [userName, changeUserName] = useState<string>("");
+    const [trelloData, setTrelloData] = useState<DataType>(settings.emptyData);
+    const [isCardVisible, setIsCardVisible] = useState<boolean>(false);
+    const [cardModal, setCardModal] = useState<CardModalType>({card: settings.card.emptyCard, columnId: 0, isNew: true});
+    storageService.set(setTrelloData)
 
 
-
-
-  return (
-    <Context.Provider
-      value={{
-        userName,
-        trelloData,
-        setTrelloData,
-        setIsCardVisible,
-        setCardContent,
-        isCardVisible,
-        cardContent,
-      }}
-    >
-          <Dashboard cardContent={cardContent} trelloData={trelloData}/>
-      <Welcome changeUserName={changeUserName} setData={setTrelloData} />
-    </Context.Provider>
-  );
+    return (
+        <Context.Provider
+            value={{
+                userName,
+                trelloData,
+                setTrelloData,
+                setIsCardVisible,
+                setCardModal,
+                isCardVisible,
+                cardModal
+            }}
+        >
+            <Dashboard trelloData={trelloData}/>
+            <Welcome changeUserName={changeUserName} />
+        </Context.Provider>
+    );
 }
 
 export default App;

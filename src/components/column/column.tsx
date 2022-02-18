@@ -4,17 +4,17 @@ import Card from "../card";
 import {Button} from "../UI";
 import {buttonStyleEnum} from "../UI";
 import {Context} from "../../context";
-import {storageService} from "../services";
-import {ContxtType} from "../../App";
+import {storageService} from "../../App";
 import {settings} from "../../settings";
 import {CardType, ColumnsType} from "../../types";
+import {CardModalType, ContxtType} from "../../types/types";
 
 type PropsType = {
-    key: number;
+    columnId: number;
     column: ColumnsType;
 };
 
-const Column = ({key, column}: PropsType) => {
+const Column: React.FC<PropsType> = ({columnId, column}) => {
     const context: ContxtType = useContext(Context);
 
     const [columnTitleInputValue, setColumnTitleInputValue] = useState("");
@@ -35,7 +35,7 @@ const Column = ({key, column}: PropsType) => {
         return () => {
             document.removeEventListener("keydown", onEscKeyDown);
         };
-    }, [isVisible]);
+    }, []);
 
     useEffect(() => {
         setColumnTitleInputValue(column.title);
@@ -48,13 +48,20 @@ const Column = ({key, column}: PropsType) => {
             return;
         }
         setIsVisible(false);
-        storageService.editColumnTitle(key, columnTitleInputValue)
+        storageService.editColumnTitle(columnId, columnTitleInputValue, context.trelloData)
     }
 
 
     function onAddCardClick() {
+        let newCard = {
+            comments: [],
+            id: Date.now(),
+            name: "",
+            text: "",
+            user: context.userName,
+        };
         context.setIsCardVisible(true);
-        context.setCardContent(0);
+        context.setCardModal({card:newCard, columnId: columnId, isNew: true} as CardModalType);
     }
 
     function onColumnTitleClick() {
@@ -88,15 +95,13 @@ const Column = ({key, column}: PropsType) => {
                     {column.title}
                 </ColumnTitle>
 
-                {column.cards.map((card: CardType) =>
-                    card ? (
+                {column.cards.map((card: CardType) =>{  return (
                         <Card
-                            cardId={card.id}
-                            columnId={key}
+                            key={card.id}
+                            card={card}
+                            columnId={columnId}
                         />
-                    ) : (
-                        <></>
-                    )
+                    )}
                 )}
 
                 <Button onClick={onAddCardClick} buttonStyle={buttonStyleEnum.STRING_GREY}>
@@ -132,13 +137,16 @@ const ColumnTitle = styled.div`
   min-height: 20px;
   text-align: left;
   text-transform: uppercase;
-    cursor: pointer;
+  cursor: pointer;
+
   &:hover {
     background-color: lightblue;
   }
+
   &:active {
     background-color: skyblue;
-  };
+  }
+;
 `;
 
 const Content = styled.div`
@@ -159,6 +167,7 @@ const Input = styled.input`
     color: #f004;
     text-transform: uppercase;
   }
+
   position: relative;
   top: 12px;
   left: 17px;
@@ -173,22 +182,22 @@ const Input = styled.input`
 `;
 
 const ColumnTitleInputBackground = styled.div`
-    width: 331px;   
-    height: 66px;
-    background-color: #0000008c;
-    border-radius: 116px;
-    padding: 12px;
-    position: absolute;
-    top: -2px;   
-    left: -10px;
-    z-index: 9;
-    box-shadow: 0 0 25px 34px #0000008c;
+  width: 331px;
+  height: 66px;
+  background-color: #0000008c;
+  border-radius: 116px;
+  padding: 12px;
+  position: absolute;
+  top: -2px;
+  left: -10px;
+  z-index: 9;
+  box-shadow: 0 0 25px 34px #0000008c;
 `
 
 const SaveButton = styled.input`
   position: absolute;
-  top: 43px;
-  left: 19px;
+  top: 53px;
+  left: 31px;
   z-index: 10;
   font-size: 14px;
   font-weight: 400;
@@ -198,11 +207,14 @@ const SaveButton = styled.input`
   background-color: #e91;
   color: #fff;
   border: 0 solid;
+
   &:hover {
     background-color: lightblue;
   }
+
   &:active {
     background-color: skyblue;
   }
-\`;
+
+\` ;
 `
