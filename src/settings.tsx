@@ -1,7 +1,7 @@
 import React from "react";
 
 export const settings = {
-    cardSticker: {
+    card: {
         infoIcon: <>&#9776;&nbsp;&nbsp;&nbsp;</>,
         cardInfoIconTitle: "Наличие описания",
         commentsNumberIcon: <>&#9993; </>,
@@ -9,7 +9,7 @@ export const settings = {
     },
 
 
-    card: {
+    cardModal: {
         textPlaceholder: "Подробного описания нет, но прямо здесь его можно написать.",
         namePlaceholder: "Новый заголовок",
         comments: "Комментарии",

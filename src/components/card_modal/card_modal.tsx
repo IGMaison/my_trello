@@ -15,7 +15,7 @@ type PropsType = {
 const CardModal: React.FC<PropsType> = ({cardModal}) => {
         const context: ContxtType = useContext(Context);
 
-        // let card: CardType = settings.card.emptyCard
+        // let card: CardType = settings.cardModal.emptyCard
         // card.user = context.userName
         //
         // if (context.cardModal.card.id) {
@@ -42,7 +42,7 @@ const CardModal: React.FC<PropsType> = ({cardModal}) => {
             context.setIsCardVisible(false);
         }
 
-        function onCardSubmit(ev: SyntheticEvent, isDelete = false) {
+        const onCardSubmit = (isDelete= false) => (ev: SyntheticEvent) => {
             ev.preventDefault();
             if (!nameValue) {
                 return;
@@ -95,13 +95,13 @@ const CardModal: React.FC<PropsType> = ({cardModal}) => {
                         {settings.button.x}
                     </CloseButton>
 
-                    <form autoComplete={"off"} onSubmit={onCardSubmit}>
+                    <form autoComplete={"off"} onSubmit={onCardSubmit()}>
                         <CardName
                             onChange={onCardNameChange}
                             autoComplete={"off"}
                             name="cardName"
                             value={nameValue}
-                            placeholder={settings.card.namePlaceholder}
+                            placeholder={settings.cardModal.namePlaceholder}
                         />
 
                         {isSaveButtonVisible && <Submit
@@ -114,17 +114,17 @@ const CardModal: React.FC<PropsType> = ({cardModal}) => {
                         </Submit>}
 
 
-                        <Author>{settings.card.creator} {cardModal.card.user}</Author>
+                        <Author>{settings.cardModal.creator} {cardModal.card.user}</Author>
 
 
-                        <ContHeader>{settings.card.text}</ContHeader>
+                        <ContHeader>{settings.cardModal.text}</ContHeader>
 
 
                         <CardText
                             onChange={onCardTextChange}
                             name="cardName"
                             value={textValue}
-                            placeholder={settings.card.textPlaceholder}
+                            placeholder={settings.cardModal.textPlaceholder}
                         />
                     </form>
 
@@ -137,7 +137,7 @@ const CardModal: React.FC<PropsType> = ({cardModal}) => {
                     )}
 
                     {!!cardModal.card.id && <ButtonDel
-                        onClick={(ev) => onCardSubmit(ev, true)}
+                        onClick={onCardSubmit(true)}
                         buttonStyle={buttonStyleEnum.STRING_GREY}
                     >
                         {settings.button.deleteCard}

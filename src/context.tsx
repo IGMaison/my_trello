@@ -10,7 +10,7 @@ const defaultContext: ContxtType = {
     setIsCardVisible: ()=>{},
     setCardModal: ()=>{},
     isCardVisible: false,
-    cardModal: {card:settings.card.emptyCard, columnId:0, isNew:true}
+    cardModal: {card:settings.cardModal.emptyCard, columnId:0, isNew:true}
 }
 export const Context = React.createContext(defaultContext)
 

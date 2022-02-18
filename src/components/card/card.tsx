@@ -23,9 +23,9 @@ const Card : React.FC<PropsType> = ({columnId, card}) => {
             <CardName>{card.name}</CardName>
 
             <CardPropIcons>
-                <span title={settings.cardSticker.cardInfoIconTitle}>{card.text ? settings.cardSticker.infoIcon : ""}</span>
+                <span title={settings.card.cardInfoIconTitle}>{card.text ? settings.card.infoIcon : ""}</span>
                 <span
-                    title={settings.cardSticker.commentsNumberIconTitle}>{settings.cardSticker.commentsNumberIcon}
+                    title={settings.card.commentsNumberIconTitle}>{settings.card.commentsNumberIcon}
                     {card.comments.length}
                 </span>
             </CardPropIcons>

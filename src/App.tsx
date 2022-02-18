@@ -13,7 +13,7 @@ function App() {
     const [userName, changeUserName] = useState<string>("");
     const [trelloData, setTrelloData] = useState<DataType>(settings.emptyData);
     const [isCardVisible, setIsCardVisible] = useState<boolean>(false);
-    const [cardModal, setCardModal] = useState<CardModalType>({card: settings.card.emptyCard, columnId: 0, isNew: true});
+    const [cardModal, setCardModal] = useState<CardModalType>({card: settings.cardModal.emptyCard, columnId: 0, isNew: true});
     storageService.set(setTrelloData)
 
 
