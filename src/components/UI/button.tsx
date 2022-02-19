@@ -7,7 +7,7 @@ type PropsType = {
     style?: object;
     onClick: MouseEventHandler;
 }
-export const Button = (props: PropsType) => {
+export const Button : React.FC<PropsType> = (props) => {
     return (
         <ButtonStyled {...props}/>)
 };

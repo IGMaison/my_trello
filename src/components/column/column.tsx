@@ -1,36 +1,25 @@
 import React, {SyntheticEvent, useContext, useEffect, useState} from "react";
 import styled from "styled-components";
-import CardSticker from "../card_sticker";
+import Card from "../card";
 import {Button} from "../UI";
 import {buttonStyleEnum} from "../UI";
 import {Context} from "../../context";
-import {DataType, storageService} from "../services";
-import {ContxtType} from "../../App";
-import {CardContent} from "../services/storage_service";
+import {storageService} from "../../App";
 import {settings} from "../../settings";
+import {CardType, ColumnsType} from "../../types";
+import {CardModalType, ContxtType} from "../../types/types";
+import CardModal from "../card_modal";
 
 type PropsType = {
-    id: string;
-    columnContent: { title: string; content: Array<CardContent> };
+    columnId: number;
+    column: ColumnsType;
 };
 
-const Column = ({id, columnContent}: PropsType) => {
+const Column: React.FC<PropsType> = ({columnId, column}) => {
     const context: ContxtType = useContext(Context);
 
-    const [ColumnTitleInputValue, setColumnTitleInputValue] = useState("");
+    const [columnTitleInputValue, setColumnTitleInputValue] = useState("");
     const [isVisible, setIsVisible] = useState(false);
-
-    const newCardInfo = {
-        comments: [],
-        id: Date.now(),
-        cardArrIdx: Infinity,
-        columnId: id,
-        columnName: columnContent.title,
-        name: "",
-        text: "",
-        user: context.userName,
-        isNewCard: true,
-    };
 
     function onChangeInput(ev: React.ChangeEvent<HTMLInputElement>) {
         setColumnTitleInputValue(ev.target.value);
@@ -47,34 +36,40 @@ const Column = ({id, columnContent}: PropsType) => {
         return () => {
             document.removeEventListener("keydown", onEscKeyDown);
         };
-    }, [isVisible]);
+    }, []);
 
     useEffect(() => {
-        setColumnTitleInputValue(columnContent.title);
+        setColumnTitleInputValue(column.title);
     }, [isVisible]);
 
     function onSaveColumnTitleClick(ev: SyntheticEvent) {
         ev.preventDefault();
-        if (!ColumnTitleInputValue.trim()
+        if (!columnTitleInputValue.trim()
         ) {
             return;
         }
         setIsVisible(false);
-        context.setTrelloData(((): DataType => {
-            context.trelloData.columns[id].title = ColumnTitleInputValue;
-            return storageService.setTrelloStorage(context.trelloData)
-        })())
+        storageService.editColumnTitle(columnId, columnTitleInputValue, context.trelloData)
     }
 
 
     function onAddCardClick() {
-        context.setIsCardVisible(true);
-        context.setCardContent(newCardInfo);
+        let newCard = {
+            comments: [],
+            id: Date.now(),
+            name: "",
+            text: "",
+            user: context.userName,
+        }
+        context.setCardModal({card:newCard, columnId: columnId, isNew: true} as CardModalType);
+        context.setIsModalVisible(true);
+        context.setModalContent(()=><CardModal/>)
     }
 
     function onColumnTitleClick() {
         setIsVisible(true);
     }
+
 
     return (
         <ColumnWrapper>
@@ -85,7 +80,7 @@ const Column = ({id, columnContent}: PropsType) => {
                     <form autoComplete={"off"}>
                         <Input
                             onChange={onChangeInput}
-                            value={ColumnTitleInputValue}
+                            value={columnTitleInputValue}
                             name="columnName"
                             placeholder={settings.column.namePlaceholder}
                         />
@@ -99,21 +94,16 @@ const Column = ({id, columnContent}: PropsType) => {
                 }
 
                 <ColumnTitle onClick={onColumnTitleClick}>
-                    {columnContent.title}
+                    {column.title}
                 </ColumnTitle>
 
-                {columnContent.content.map((CardContent: CardContent, idx) =>
-                    CardContent ? (
-                        <CardSticker
-                            isNewCard={false}
-                            columnId={id}
-                            key={CardContent.id}
-                            cardArrIdx={idx}
-                            {...CardContent}
+                {column.cards.map((card: CardType) =>{  return (
+                        <Card
+                            key={card.id}
+                            card={card}
+                            columnId={columnId}
                         />
-                    ) : (
-                        <></>
-                    )
+                    )}
                 )}
 
                 <Button onClick={onAddCardClick} buttonStyle={buttonStyleEnum.STRING_GREY}>
@@ -149,13 +139,16 @@ const ColumnTitle = styled.div`
   min-height: 20px;
   text-align: left;
   text-transform: uppercase;
-    cursor: pointer;
+  cursor: pointer;
+
   &:hover {
     background-color: lightblue;
   }
+
   &:active {
     background-color: skyblue;
-  };
+  }
+;
 `;
 
 const Content = styled.div`
@@ -176,6 +169,7 @@ const Input = styled.input`
     color: #f004;
     text-transform: uppercase;
   }
+
   position: relative;
   top: 12px;
   left: 17px;
@@ -190,22 +184,22 @@ const Input = styled.input`
 `;
 
 const ColumnTitleInputBackground = styled.div`
-    width: 331px;   
-    height: 66px;
-    background-color: #0000008c;
-    border-radius: 116px;
-    padding: 12px;
-    position: absolute;
-    top: -2px;   
-    left: -10px;
-    z-index: 9;
-    box-shadow: 0 0 25px 34px #0000008c;
+  width: 331px;
+  height: 66px;
+  background-color: #0000008c;
+  border-radius: 116px;
+  padding: 12px;
+  position: absolute;
+  top: -2px;
+  left: -10px;
+  z-index: 9;
+  box-shadow: 0 0 25px 34px #0000008c;
 `
 
 const SaveButton = styled.input`
   position: absolute;
-  top: 43px;
-  left: 19px;
+  top: 53px;
+  left: 31px;
   z-index: 10;
   font-size: 14px;
   font-weight: 400;
@@ -215,11 +209,14 @@ const SaveButton = styled.input`
   background-color: #e91;
   color: #fff;
   border: 0 solid;
+
   &:hover {
     background-color: lightblue;
   }
+
   &:active {
     background-color: skyblue;
   }
-\`;
+
+\` ;
 `

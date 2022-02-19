@@ -1,7 +1,7 @@
 import React from "react";
 
 export const settings = {
-    cardSticker: {
+    card: {
         infoIcon: <>&#9776;&nbsp;&nbsp;&nbsp;</>,
         cardInfoIconTitle: "Наличие описания",
         commentsNumberIcon: <>&#9993; </>,
@@ -9,13 +9,19 @@ export const settings = {
     },
 
 
-    card: {
+    cardModal: {
         textPlaceholder: "Подробного описания нет, но прямо здесь его можно написать.",
         namePlaceholder: "Новый заголовок",
         comments: "Комментарии",
         text: "Описание",
         creator: "Создал:",
-
+        emptyCard: {
+            comments: [],
+            id: 0,
+            name: "",
+            text: "",
+            user: "",
+        },
     },
     comments:{
         name: "Комментарии",
@@ -35,8 +41,34 @@ export const settings = {
     column: {
         namePlaceholder: "ЗАГОЛОВОК КОЛОНКИ"
     },
-    welcome:{
+    enter:{
         placeholder: "Введите ваше имя здесь.",
+    },
+    baseName: "t",
+    emptyData:  {
+        columns: [
+            {
+                id: 1,
+                title: "TODO",
+                cards: []
+            },
+            {
+                id: 2,
+                title: "IN PROGRESS",
+                cards: []
+            },
+            {
+                id: 3,
+                title: "TESTING",
+                cards: []
+            },
+            {
+                id: 4,
+                title: "DONE",
+                cards: []
+            }
+        ]
+
     }
 
 }
