@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {Context} from "../../context";
 import {CardType, ContxtType} from "../../types/types";
 import {settings} from "../../settings";
+import CardModal from "../card_modal";
 
 type PropsType = {
     columnId: number,
@@ -14,7 +15,8 @@ const Card : React.FC<PropsType> = ({columnId, card}) => {
 
     const onCardClick = () => {
         context.setCardModal({card: card, columnId: columnId, isNew:false});
-        context.setIsCardVisible(true);
+        context.setIsModalVisible(true);
+        context.setModalContent(()=><CardModal/>)
     }
 
     return (

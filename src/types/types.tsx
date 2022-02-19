@@ -1,4 +1,4 @@
-import {Dispatch, SetStateAction} from "react";
+import React, {Dispatch, SetStateAction} from "react";
 
 export type DataType = {
     columns: ColumnsType[]
@@ -34,8 +34,10 @@ export type ContxtType = {
     userName: string,
     trelloData: DataType,
     setTrelloData: Dispatch<SetStateAction<DataType>>,
-    setIsCardVisible: Dispatch<SetStateAction<boolean>>,
+    setIsModalVisible: Dispatch<SetStateAction<boolean>>,
     setCardModal:  Dispatch<SetStateAction<CardModalType>>,
-    isCardVisible: boolean,
+    setUserName: Dispatch<SetStateAction<string>>,
+    setModalContent: Dispatch<SetStateAction<React.FC>>,
+    isModalVisible: boolean,
     cardModal: CardModalType
 }

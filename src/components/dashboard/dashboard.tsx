@@ -1,14 +1,12 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import Column from "../column";
-import CardModal from "../card_modal";
 import styled from "styled-components";
-import {Context} from "../../context";
 import {DataType} from "../../types";
 
 type PropsType = { trelloData: DataType }
 
 const Dashboard : React.FC<PropsType> = ({trelloData}) => {
-    const context = useContext(Context)
+
     return (
         <Main>
             {trelloData.columns.length > 0 ? (
@@ -24,9 +22,6 @@ const Dashboard : React.FC<PropsType> = ({trelloData}) => {
             ) : (
                 <>NOTHING TO SHOW</>
             )}
-
-            {context.isCardVisible &&
-            <CardModal cardModal={context.cardModal}/>}
         </Main>
     );
 }
