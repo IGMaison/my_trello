@@ -111,7 +111,7 @@ const Post = styled.div`
   background-color: #fff;
   border-radius: 5px;
   border: solid 1px #ddd;
-  width: 693px;
+  width: 96%;
   text-align: left;
   display: inline-block;
 `;
@@ -119,7 +119,7 @@ const Post = styled.div`
 const DeleteButton = styled(Button)`
   float: right;
   position: relative;
-  top: -62px;
+  top: -59px;
   right: 0;
   height: 35px;
 `

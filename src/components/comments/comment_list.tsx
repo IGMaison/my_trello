@@ -96,6 +96,8 @@ const CommentsBlock = styled.div`
   position: relative;
   width: 100%;
   text-align: left;
+  overflow-y: scroll;
+  max-height: 50vh;
 `;
 
 const CommentNew = styled.div`

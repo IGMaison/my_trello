@@ -188,6 +188,7 @@ const PopupCard = styled.div`
   bottom: 0;
   top: 0;
   height: fit-content;
+  max-height: 85vh;
 `;
 
 const CardName = styled.input`
