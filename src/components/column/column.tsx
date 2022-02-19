@@ -8,6 +8,7 @@ import {storageService} from "../../App";
 import {settings} from "../../settings";
 import {CardType, ColumnsType} from "../../types";
 import {CardModalType, ContxtType} from "../../types/types";
+import CardModal from "../card_modal";
 
 type PropsType = {
     columnId: number;
@@ -59,9 +60,10 @@ const Column: React.FC<PropsType> = ({columnId, column}) => {
             name: "",
             text: "",
             user: context.userName,
-        };
-        context.setIsCardVisible(true);
+        }
         context.setCardModal({card:newCard, columnId: columnId, isNew: true} as CardModalType);
+        context.setIsModalVisible(true);
+        context.setModalContent(()=><CardModal/>)
     }
 
     function onColumnTitleClick() {

@@ -6,27 +6,29 @@ import {Context} from "../../context";
 import {storageService} from "../../App";
 import {settings} from "../../settings";
 import {buttonStyle} from "../UI/button";
-import {CardModalType, ContxtType} from "../../types/types";
+import {ContxtType} from "../../types/types";
 
-type PropsType = {
-    cardModal: CardModalType
-}
 
-const CardModal: React.FC<PropsType> = ({cardModal}) => {
+const CardModal = () => {
+
         const context: ContxtType = useContext(Context);
 
-        // let card: CardType = settings.cardModal.emptyCard
-        // card.user = context.userName
-        //
-        // if (context.cardModal.card.id) {
-        //     card = context.cardModal.card
-        // }
-
         const [isSaveButtonVisible, setIsSaveButtonVisible] = useState<boolean>(false);
-        const [textValue, setTextValue] = useState<string>(cardModal.card.text)
-        const [nameValue, setNameValue] = useState<string>(cardModal.card.name)
+        const [textValue, setTextValue] = useState<string>(context.cardModal.card.text)
+        const [nameValue, setNameValue] = useState<string>(context.cardModal.card.name)
 
 
+        useEffect(() => {
+            document.addEventListener("keydown", onEscKeyDown)
+            return () => {
+                document.removeEventListener("keydown", onEscKeyDown);
+
+            }
+        });
+
+        if (!context.cardModal.card.id) {
+            return <></>
+        }
         const onCardNameChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
             setNameValue(ev.target.value)
             setIsSaveButtonVisible(!!ev.target.value)
@@ -39,10 +41,10 @@ const CardModal: React.FC<PropsType> = ({cardModal}) => {
 
         const onCloseCardClick = () => {
             setIsSaveButtonVisible(false);
-            context.setIsCardVisible(false);
+            context.setIsModalVisible(false);
         }
 
-        const onCardSubmit = (isDelete= false) => (ev: SyntheticEvent) => {
+        const onCardSubmit = (isDelete = false) => (ev: SyntheticEvent) => {
             ev.preventDefault();
             if (!nameValue) {
                 return;
@@ -50,44 +52,36 @@ const CardModal: React.FC<PropsType> = ({cardModal}) => {
 
             if (isDelete) {
 
-                storageService.deleteCard(cardModal.columnId, cardModal.card.id, context.trelloData);
+                storageService.deleteCard(context.cardModal.columnId, context.cardModal.card.id, context.trelloData);
 
             } else {
                 const cardEdited = {
-                    id: cardModal.card.id,
+                    id: context.cardModal.card.id,
                     name: nameValue,
-                    user:cardModal.card.user,
+                    user: context.cardModal.card.user,
                     text: textValue
                     ,
-                    comments: !cardModal.card.comments.length ? [] : cardModal.card.comments
+                    comments: !context.cardModal.card.comments.length ? [] : context.cardModal.card.comments
                 }
 
-                storageService.SaveCard(cardModal.columnId, cardEdited, context.trelloData)
+                storageService.SaveCard(context.cardModal.columnId, cardEdited, context.trelloData)
             }
-
             onCloseCardClick();
         }
 
         function onEscKeyDown(ev: KeyboardEvent) {
-            if (context.isCardVisible && ev.key === "Escape") {
+            if (context.isModalVisible && ev.key === "Escape") {
                 setIsSaveButtonVisible(false);
-                context.setIsCardVisible(false);
+                context.setIsModalVisible(false);
             }
         }
 
-        useEffect(() => {
-            document.addEventListener("keydown", onEscKeyDown)
-            return () => {
-                document.removeEventListener("keydown", onEscKeyDown);
-
-            }
-        });
 
         return (
             <CardBackground>
                 <PopupCard>
 
-                    <ColumnTop>{context.trelloData.columns.filter((column) => column.id === cardModal.columnId)[0].title || ""}</ColumnTop>
+                    <ColumnTop>{context.trelloData.columns.filter((column) => column.id === context.cardModal.columnId)[0].title || ""}</ColumnTop>
                     <CloseButton
                         onClick={onCloseCardClick}
                         buttonStyle={buttonStyleEnum.ORANGE}
@@ -114,7 +108,7 @@ const CardModal: React.FC<PropsType> = ({cardModal}) => {
                         </Submit>}
 
 
-                        <Author>{settings.cardModal.creator} {cardModal.card.user}</Author>
+                        <Author>{settings.cardModal.creator} {context.cardModal.card.user}</Author>
 
 
                         <ContHeader>{settings.cardModal.text}</ContHeader>
@@ -128,15 +122,15 @@ const CardModal: React.FC<PropsType> = ({cardModal}) => {
                         />
                     </form>
 
-                    {!cardModal.isNew && (
+                    {!context.cardModal.isNew && (
                         <Comments
-                            columnId={cardModal.columnId}
-                            cardId={cardModal.card.id}
-                            comments={context.trelloData.columns.filter((column) => column.id === cardModal.columnId)[0].cards.filter((card) => card.id === cardModal.card.id)[0].comments}
+                            columnId={context.cardModal.columnId}
+                            cardId={context.cardModal.card.id}
+                            comments={context.trelloData.columns.filter((column) => column.id === context.cardModal.columnId)[0].cards.filter((card) => card.id === context.cardModal.card.id)[0].comments}
                         />
                     )}
 
-                    {!!cardModal.card.id && <ButtonDel
+                    {!!context.cardModal.card.id && <ButtonDel
                         onClick={onCardSubmit(true)}
                         buttonStyle={buttonStyleEnum.STRING_GREY}
                     >
@@ -194,6 +188,7 @@ const PopupCard = styled.div`
   bottom: 0;
   top: 0;
   height: fit-content;
+  max-height: 85vh;
 `;
 
 const CardName = styled.input`

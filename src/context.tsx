@@ -7,9 +7,11 @@ const defaultContext: ContxtType = {
     userName: "",
     trelloData: settings.emptyData as DataType,
     setTrelloData: ()=>{},
-    setIsCardVisible: ()=>{},
+    setIsModalVisible: ()=>{},
     setCardModal: ()=>{},
-    isCardVisible: false,
+    setUserName: ()=>{},
+    setModalContent: ()=>{},
+    isModalVisible: false,
     cardModal: {card:settings.cardModal.emptyCard, columnId:0, isNew:true}
 }
 export const Context = React.createContext(defaultContext)

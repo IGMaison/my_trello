@@ -41,7 +41,7 @@ export const settings = {
     column: {
         namePlaceholder: "ЗАГОЛОВОК КОЛОНКИ"
     },
-    welcome:{
+    enter:{
         placeholder: "Введите ваше имя здесь.",
     },
     baseName: "t",
@@ -69,12 +69,6 @@ export const settings = {
             }
         ]
 
-        // column: {
-        //     1: {title: "TODO", content: []},
-        //     2: {title: "IN PROGRESS", content: []},
-        //     3: {title: "TESTING", content: []},
-        //     4: {title: "DONE", content: []},
-        // },
     }
 
 }
