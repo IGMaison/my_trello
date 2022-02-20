@@ -6,12 +6,12 @@ import {buttonStyleEnum} from "../../UI";
 import {storageService} from "../../../App";
 import {settings} from "../../../settings";
 import {buttonStyle} from "../../UI/button";
-import {CommentType} from "../../../types";
+import {CommentType, DataType} from "../../../types";
 import {ContxtType} from "../../../types/types";
 
 type PropsType = {
     cardId: number;
-    columnId: number;
+    trelloData: DataType;
     comment: CommentType
     setCurrComments: Dispatch<SetStateAction<CommentType[]>>
 };
@@ -37,15 +37,20 @@ const Comment : React.FC<PropsType> = ({...props}) => {
             id: props.comment.id,
             text: commentText,
             user: props.comment.user,
+            cardId: props.cardId
         };
 
-        storageService.editComment(props.columnId, props.cardId, props.comment.id, newComment, context.trelloData)
+        storageService.editComment(newComment, props.trelloData)
         setIsPostEditAbility(false);
     }
 
     function onDeletePost() {
-        storageService.deleteComment(props.columnId, props.cardId, props.comment.id, context.trelloData);
-        props.setCurrComments(context.trelloData.columns.filter((column) => column.id === props.columnId)[0].cards.filter((card) => card.id === props.cardId)[0].comments.filter((comment) => comment.id !== props.comment.id))
+        storageService.deleteComment(props.comment.id, context.trelloData);
+        props.setCurrComments(props.trelloData.comments.filter((comment)=>comment.cardId === props.cardId))
+    }
+
+    function onEditCommentClick () {
+        setIsPostEditAbility(true)
     }
 
 
@@ -66,9 +71,7 @@ const Comment : React.FC<PropsType> = ({...props}) => {
 
                 {!isPostEditAbility ?
                     <Button
-                        onClick={() => {
-                            setIsPostEditAbility(true);
-                        }}
+                        onClick={onEditCommentClick}
                         buttonStyle={buttonStyleEnum.GREY}
                     >{settings.button.change}
                     </Button>

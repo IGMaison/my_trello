@@ -1,22 +1,22 @@
 import React, {useContext} from "react";
 import styled from "styled-components";
 import {Context} from "../../context";
-import {CardType, ContxtType} from "../../types/types";
+import {CardType, ContxtType, DataType} from "../../types/types";
 import {settings} from "../../settings";
 import CardModal from "../card_modal";
 
 type PropsType = {
-    columnId: number,
+    trelloData: DataType,
     card: CardType
 }
 
-const Card : React.FC<PropsType> = ({columnId, card}) => {
+const Card: React.FC<PropsType> = ({trelloData, card}) => {
     const context: ContxtType = useContext(Context);
 
     const onCardClick = () => {
-        context.setCardModal({card: card, columnId: columnId, isNew:false});
+        context.setCardModal({card: card, isNew: false});
         context.setIsModalVisible(true);
-        context.setModalContent(()=><CardModal/>)
+        context.setModalContent(() => <CardModal/>)
     }
 
     return (
@@ -28,7 +28,7 @@ const Card : React.FC<PropsType> = ({columnId, card}) => {
                 <span title={settings.card.cardInfoIconTitle}>{card.text ? settings.card.infoIcon : ""}</span>
                 <span
                     title={settings.card.commentsNumberIconTitle}>{settings.card.commentsNumberIcon}
-                    {card.comments.length}
+                    {trelloData.comments.filter((comment) => comment.cardId === card.id).length}
                 </span>
             </CardPropIcons>
         </CardBase>

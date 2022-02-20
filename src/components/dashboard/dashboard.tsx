@@ -14,7 +14,7 @@ const Dashboard : React.FC<PropsType> = ({trelloData}) => {
                     return (
                         <Column
                             key={column.id}
-                            columnId={column.id}
+                            trelloData={trelloData}
                             column={column}
                         >{column.id}</Column>
                     )

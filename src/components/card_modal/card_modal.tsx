@@ -18,6 +18,7 @@ const CardModal = () => {
         const [nameValue, setNameValue] = useState<string>(context.cardModal.card.name)
 
 
+
         useEffect(() => {
             document.addEventListener("keydown", onEscKeyDown)
             return () => {
@@ -52,7 +53,7 @@ const CardModal = () => {
 
             if (isDelete) {
 
-                storageService.deleteCard(context.cardModal.columnId, context.cardModal.card.id, context.trelloData);
+                storageService.deleteCard(context.cardModal.card.id, context.trelloData);
 
             } else {
                 const cardEdited = {
@@ -61,10 +62,16 @@ const CardModal = () => {
                     user: context.cardModal.card.user,
                     text: textValue
                     ,
-                    comments: !context.cardModal.card.comments.length ? [] : context.cardModal.card.comments
+                    comments: !context.trelloData.comments.filter((comment) => comment.cardId === context.cardModal.card.id).length
+                        ?
+                        []
+                        :
+                        context.trelloData.comments.filter((comment) => comment.cardId === context.cardModal.card.id),
+                    columnId: context.cardModal.card.columnId
+
                 }
 
-                storageService.SaveCard(context.cardModal.columnId, cardEdited, context.trelloData)
+                storageService.SaveCard(cardEdited, context.trelloData)
             }
             onCloseCardClick();
         }
@@ -81,7 +88,7 @@ const CardModal = () => {
             <CardBackground>
                 <PopupCard>
 
-                    <ColumnTop>{context.trelloData.columns.filter((column) => column.id === context.cardModal.columnId)[0].title || ""}</ColumnTop>
+                    <ColumnTop>{context.trelloData.columns.filter((column) => column.id === context.cardModal.card.columnId)[0].title || ""}</ColumnTop>
                     <CloseButton
                         onClick={onCloseCardClick}
                         buttonStyle={buttonStyleEnum.ORANGE}
@@ -124,9 +131,9 @@ const CardModal = () => {
 
                     {!context.cardModal.isNew && (
                         <Comments
-                            columnId={context.cardModal.columnId}
+                            trelloData={context.trelloData}
                             cardId={context.cardModal.card.id}
-                            comments={context.trelloData.columns.filter((column) => column.id === context.cardModal.columnId)[0].cards.filter((card) => card.id === context.cardModal.card.id)[0].comments}
+                            comments={context.trelloData.comments.filter((comment) => comment.cardId === context.cardModal.card.id)}
                         />
                     )}
 

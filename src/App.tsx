@@ -14,7 +14,7 @@ function App() {
     const [userName, setUserName] = useState<string>("");
     const [trelloData, setTrelloData] = useState<DataType>(settings.emptyData);
     const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
-    const [cardModal, setCardModal] = useState<CardModalType>({card: settings.cardModal.emptyCard, columnId: 0, isNew: true});
+    const [cardModal, setCardModal] = useState<CardModalType>({card: settings.cardModal.emptyCard, isNew: true});
     const [modalContent, setModalContent] = useState<React.FC>(()=><Enter/>)
     storageService.set(setTrelloData)
 
