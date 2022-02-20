@@ -12,7 +12,7 @@ const defaultContext: ContxtType = {
     setUserName: ()=>{},
     setModalContent: ()=>{},
     isModalVisible: false,
-    cardModal: {card:settings.cardModal.emptyCard, columnId:0, isNew:true}
+    cardModal: {card:settings.cardModal.emptyCard, isNew:true}
 }
 export const Context = React.createContext(defaultContext)
 

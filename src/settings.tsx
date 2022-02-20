@@ -16,11 +16,11 @@ export const settings = {
         text: "Описание",
         creator: "Создал:",
         emptyCard: {
-            comments: [],
             id: 0,
             name: "",
             text: "",
             user: "",
+            columnId: 0,
         },
     },
     comments:{
@@ -50,24 +50,22 @@ export const settings = {
             {
                 id: 1,
                 title: "TODO",
-                cards: []
             },
             {
                 id: 2,
                 title: "IN PROGRESS",
-                cards: []
             },
             {
                 id: 3,
                 title: "TESTING",
-                cards: []
             },
             {
                 id: 4,
                 title: "DONE",
-                cards: []
             }
-        ]
+        ],
+        cards: [],
+        comments: [],
 
     }
 

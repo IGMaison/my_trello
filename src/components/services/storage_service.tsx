@@ -38,46 +38,41 @@ export class StorageService {
         })())
     }
 
-    public deleteCard(columnId: number, cardId: number, trelloData: DataType): DataType {
+    public deleteCard(cardId: number, trelloData: DataType): DataType {
         StorageService.setTrelloData(((): DataType => {
-            let columnArrIdx = trelloData.columns.findIndex((column: ColumnsType) => column.id === columnId)
-            trelloData.columns[columnArrIdx].cards = trelloData.columns[columnArrIdx].cards.filter((card) => card.id !== cardId)
+            trelloData.cards = trelloData.cards.filter((card) => card.id !== cardId)
+            trelloData.comments = trelloData.comments.filter((comment) => comment.cardId !== cardId);
             return this.setTrelloStorage(trelloData)
         })())
         return trelloData
     }
 
-    public SaveCard(columnId: number, editedCard: CardType, trelloData: DataType): void {
+    public SaveCard(editedCard: CardType, trelloData: DataType): void {
         StorageService.setTrelloData(((): DataType => {
-            let columnArrIdx = trelloData.columns.findIndex((column: ColumnsType) => column.id === columnId)
-            this.deleteCard(columnId, editedCard.id, trelloData).columns[columnArrIdx].cards.push(editedCard);
-            trelloData.columns[columnArrIdx].cards = trelloData.columns[columnArrIdx].cards.sort((a, b) => a.id - b.id);
+            this.deleteCard(editedCard.id, trelloData).cards.push(editedCard)
+            trelloData.cards = trelloData.cards.sort((a, b) => a.id - b.id);
             return this.setTrelloStorage(trelloData)
         })())
     }
 
-    public saveNewComment(columnId: number, cardId: number, comment: CommentType, trelloData: DataType): void {
-
+    public saveNewComment(cardId: number, comment: CommentType, trelloData: DataType): void {
         StorageService.setTrelloData(((): DataType => {
-            let columnArrIdx = trelloData.columns.findIndex((column: ColumnsType) => column.id === columnId)
-            let cardArrIdx = trelloData.columns[columnArrIdx].cards.findIndex((card: CardType) => card.id === cardId)
-            trelloData.columns[columnArrIdx].cards[cardArrIdx].comments.push(comment);
-            trelloData.columns[columnArrIdx].cards[cardArrIdx].comments = trelloData.columns[columnArrIdx].cards[cardArrIdx].comments.sort((a, b) => b.id - a.id);
+            trelloData.comments.push(comment);
+            trelloData.comments = trelloData.comments.sort((a, b) => b.id - a.id);
             return this.setTrelloStorage(trelloData)
         })());
     }
 
-    public deleteComment(columnId: number, cardId: number, commentId: number, trelloData: DataType): void {
+    public deleteComment(commentId: number, trelloData: DataType): DataType {
         StorageService.setTrelloData(((): DataType => {
-            let columnArrIdx = trelloData.columns.findIndex((column: ColumnsType) => column.id === columnId);
-            let cardArrIdx = trelloData.columns[columnArrIdx].cards.findIndex((card: CardType) => card.id === cardId);
-            trelloData.columns[columnArrIdx].cards[cardArrIdx].comments = trelloData.columns[columnArrIdx].cards[cardArrIdx].comments.filter((comment) => comment.id !== commentId);
+            trelloData.comments = trelloData.comments.filter((comment) => comment.id !== commentId);
             return this.setTrelloStorage(trelloData)
         })());
+        return trelloData
     }
 
-    public editComment(columnId: number, cardId: number, commentId: number, comment: CommentType, trelloData: DataType) {
-        this.deleteComment(columnId, cardId, commentId, trelloData)
-        this.saveNewComment(columnId, cardId, comment, trelloData)
+    public editComment(comment: CommentType, trelloData: DataType) {
+        this.deleteComment(comment.id, trelloData)
+        this.saveNewComment(comment.cardId, comment, trelloData)
     }
 }

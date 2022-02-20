@@ -5,18 +5,18 @@ import {Context} from "../../context";
 import {storageService} from "../../App";
 import {settings} from "../../settings";
 import {buttonStyle} from "../UI/button";
-import {CommentType} from "../../types";
+import {CommentType, DataType} from "../../types";
 import {ContxtType} from "../../types/types";
 import Comment from "./comment";
 
 
 type PropsType = {
-    columnId: number;
+    trelloData: DataType;
     cardId: number;
     comments: CommentType[];
 }
 
-const Comments : React.FC<PropsType> = ({comments, columnId, cardId,}) => {
+const Comments : React.FC<PropsType> = ({comments, trelloData, cardId,}) => {
     const context: ContxtType = useContext<ContxtType>(Context);
 
     const [SaveCommentButtonVisibility, setSaveCommentButtonVisibility] = useState<boolean>(false);
@@ -38,13 +38,14 @@ const Comments : React.FC<PropsType> = ({comments, columnId, cardId,}) => {
             id: Date.now(),
             text: newComment,
             user: context.userName,
+            cardId: cardId
         };
 
-        storageService.saveNewComment(columnId, cardId, newCommentInfo, context.trelloData)
+        storageService.saveNewComment(cardId, newCommentInfo, trelloData)
         setNewComment("");
         setSaveCommentButtonVisibility(false);
+        setCurrComments(context.trelloData.comments.filter((comment) => comment.cardId === cardId))
     };
-
 
     return (
         <CommentsBlock>
@@ -75,8 +76,8 @@ const Comments : React.FC<PropsType> = ({comments, columnId, cardId,}) => {
                     <Comment
                         key={comment.id}
                         setCurrComments={setCurrComments}
-                        columnId={columnId}
                         cardId={cardId}
+                        trelloData={trelloData}
                         comment={comment}/>)
             })}
             {!!comments.length

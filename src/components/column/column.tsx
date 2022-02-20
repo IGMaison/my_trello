@@ -6,16 +6,16 @@ import {buttonStyleEnum} from "../UI";
 import {Context} from "../../context";
 import {storageService} from "../../App";
 import {settings} from "../../settings";
-import {CardType, ColumnsType} from "../../types";
+import {CardType, ColumnsType, DataType} from "../../types";
 import {CardModalType, ContxtType} from "../../types/types";
 import CardModal from "../card_modal";
 
 type PropsType = {
-    columnId: number;
+    trelloData: DataType;
     column: ColumnsType;
 };
 
-const Column: React.FC<PropsType> = ({columnId, column}) => {
+const Column: React.FC<PropsType> = ({trelloData, column}) => {
     const context: ContxtType = useContext(Context);
 
     const [columnTitleInputValue, setColumnTitleInputValue] = useState("");
@@ -49,21 +49,22 @@ const Column: React.FC<PropsType> = ({columnId, column}) => {
             return;
         }
         setIsVisible(false);
-        storageService.editColumnTitle(columnId, columnTitleInputValue, context.trelloData)
+        storageService.editColumnTitle(column.id, columnTitleInputValue, context.trelloData)
     }
 
 
     function onAddCardClick() {
         let newCard = {
-            comments: [],
             id: Date.now(),
             name: "",
             text: "",
             user: context.userName,
+            columnId: column.id
         }
-        context.setCardModal({card:newCard, columnId: columnId, isNew: true} as CardModalType);
-        context.setIsModalVisible(true);
+        context.setCardModal({card:newCard, isNew: true} as CardModalType);
         context.setModalContent(()=><CardModal/>)
+        context.setIsModalVisible(true);
+
     }
 
     function onColumnTitleClick() {
@@ -97,11 +98,11 @@ const Column: React.FC<PropsType> = ({columnId, column}) => {
                     {column.title}
                 </ColumnTitle>
 
-                {column.cards.map((card: CardType) =>{  return (
+                {trelloData.cards.filter((card)=>card.columnId === column.id).map((card: CardType) =>{  return (
                         <Card
                             key={card.id}
                             card={card}
-                            columnId={columnId}
+                            trelloData={trelloData}
                         />
                     )}
                 )}

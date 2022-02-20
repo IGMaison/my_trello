@@ -1,13 +1,14 @@
 import React, {Dispatch, SetStateAction} from "react";
 
 export type DataType = {
-    columns: ColumnsType[]
+    columns: ColumnsType[];
+    cards: CardType[];
+    comments: CommentType[];
 }
 
 export type  ColumnsType = {
     id: number;
     title: string;
-    cards: CardType[]
 }
 
 export type CardType = {
@@ -15,18 +16,18 @@ export type CardType = {
     name: string;
     text: string;
     user: string;
-    comments: CommentType[]
+    columnId: number;
 }
 
 export type CommentType = {
     id: number;
     text: string;
-    user: string
+    user: string;
+    cardId: number;
 }
 
 export type CardModalType = {
     card: CardType;
-    columnId: number,
     isNew: boolean
 }
 
